@@ -7,7 +7,12 @@ import { badgeVariants } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import Layout from '@/layouts/Layout.astro'
-import { formatDate, parseAuthors, readingTime } from '@/lib/utils'
+import {
+  formatDate,
+  isLongArticle,
+  parseAuthors,
+  readingTime,
+} from '@/lib/utils'
 import { Icon } from 'astro-icon/components'
 import { Image } from 'astro:assets'
 import { type CollectionEntry, getCollection } from 'astro:content'
@@ -157,7 +162,11 @@ const authors = await parseAuthors(post.data.authors ?? [])
       <Content />
     </article>
 
-    <PostNavigation prevPost={prevPost} nextPost={nextPost} />
+    {
+      isLongArticle(post.body) && (
+        <PostNavigation prevPost={prevPost} nextPost={nextPost} />
+      )
+    }
   </section>
 
   <Button
