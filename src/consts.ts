@@ -19,7 +19,7 @@ export const SITE: Site = {
   EMAIL: 'echoghi@rennalabs.xyz',
   NUM_POSTS_ON_HOMEPAGE: 2,
   POSTS_PER_PAGE: 3,
-  SITEURL: 'https://emilechoghi.com',
+  SITEURL: 'https://emile.sh',
 }
 
 export const NAV_LINKS: Link[] = [
