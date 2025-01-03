@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { NAV_LINKS } from '@/consts'
-import { Briefcase, Home, Newspaper, Tags } from 'lucide-react'
+import { Archive, Briefcase, Home, Tags } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const iconMap = {
   home: () => <Home className="h-5 w-5" />,
-  blog: () => <Newspaper className="h-5 w-5" />,
+  blog: () => <Archive className="h-5 w-5" />,
   tags: () => <Tags className="h-5 w-5" />,
   work: () => <Briefcase className="h-5 w-5" />,
 } as Record<string, () => JSX.Element>
