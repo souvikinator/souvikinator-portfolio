@@ -17,7 +17,7 @@ const { project } = Astro.props
     href={project.data.link}
     class="block"
     external
-    class="flex flex-col gap-4 sm:flex-row"
+    class="group flex flex-col gap-4 sm:flex-row"
   >
     {
       project.data.image && (
@@ -27,7 +27,7 @@ const { project } = Astro.props
             alt={project.data.name}
             width={1200}
             height={630}
-            class="object-cover"
+            class="object-cover grayscale group-hover:grayscale-0"
           />
         </div>
       )
