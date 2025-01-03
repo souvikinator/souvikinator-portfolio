@@ -49,7 +49,7 @@ const MobileMenu = () => {
 
           <div
             className={cn(
-              'absolute left-1/2 top-1/2 h-0.5 w-5 -translate-x-1/2 -translate-y-1/2 bg-primary transition-all duration-300',
+              'absolute left-1/2 top-1/2 h-0.5 w-5 -translate-x-1/2 -translate-y-1/2 bg-primary transition-all duration-200',
               isOpen ? 'opacity-0' : 'opacity-100',
             )}
           />
