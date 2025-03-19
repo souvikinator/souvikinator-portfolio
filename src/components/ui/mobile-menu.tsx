@@ -36,7 +36,7 @@ const MobileMenu = () => {
     <div className="flex flex-col items-center lg:hidden">
       <Button
         onClick={toggleMenu}
-        className="z-50 bg-background p-1 text-primary focus:outline-none"
+        className="z-50 bg-transparent p-1 text-primary focus:outline-none"
         aria-label="Toggle Menu"
       >
         <div className="relative flex h-8 w-8 cursor-pointer">
