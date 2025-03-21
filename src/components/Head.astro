@@ -49,6 +49,11 @@ const { title, description, image = '/static/twitter-card.png' } = Astro.props
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={new URL(image, Astro.url)} />
 
+<meta
+  name="google-site-verification"
+  content="R2IiTJcQOm4D5Pu4KpkKhTDU2EYLLPVhKJsvn_WhXqA"
+/>
+
 <ClientRouter />
 
 <script is:inline>
