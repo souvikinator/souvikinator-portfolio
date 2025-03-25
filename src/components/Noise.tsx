@@ -29,7 +29,7 @@ export function NoiseOverlay({ image, className = '' }: NoiseOverlayProps) {
 
   return (
     <div>
-      <div className={`relative ${className}`}>
+      <div className={`relative ${className} mb-8`}>
         <img src={image} alt="Base image" className="mb-1 h-full w-full" />
         {noiseEnabled && (
           <div
@@ -40,18 +40,6 @@ export function NoiseOverlay({ image, className = '' }: NoiseOverlayProps) {
             }}
           />
         )}
-      </div>
-      <div className="mb-8 text-xs italic text-muted-foreground">
-        Photo Credit: Raphael Barberi (
-        <a
-          href="https://x.com/itsrapha83"
-          rel="noreferrer nofollow"
-          target="_blank"
-          className="text-muted-foreground hover:text-foreground"
-        >
-          @itsrapha83
-        </a>
-        )
       </div>
 
       <div className="space-y-4">
