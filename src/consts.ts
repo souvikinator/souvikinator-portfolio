@@ -17,7 +17,7 @@ export const SITE: Site = {
   DESCRIPTION:
     'Emile Choghi is a software engineer who specializes in building useful digital experiences.',
   EMAIL: 'echoghi@rennalabs.xyz',
-  NUM_POSTS_ON_HOMEPAGE: 2,
+  NUM_POSTS_ON_HOMEPAGE: 3,
   POSTS_PER_PAGE: 3,
   SITEURL: 'https://emile.sh',
 }
