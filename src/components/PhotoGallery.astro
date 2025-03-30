@@ -1,0 +1,236 @@
+---
+import type { ImageMetadata } from 'astro'
+import { Icon } from 'astro-icon/components'
+import { Image } from 'astro:assets'
+
+interface Props {
+  name: string
+  images: ImageMetadata[]
+}
+
+const { name, images } = Astro.props
+---
+
+<div class="photo-gallery">
+  <div class="columns-1 gap-5 sm:columns-2 sm:gap-2 md:columns-3">
+    {
+      images.map((image, index) => (
+        <div class="relative mb-5 break-inside-avoid sm:mb-2">
+          <Image
+            src={image}
+            alt={`Photo ${index + 1} from my trip to ${name}`}
+            loading={index < 15 ? 'eager' : 'lazy'}
+            decoding={index < 15 ? 'sync' : 'async'}
+            class="animate-fade gallery-image cursor-zoom-in rounded-sm grayscale transition-all hover:grayscale-0"
+            draggable={false}
+            data-index={index}
+            width={image.width}
+            height={image.height}
+            widths={[360, 720, 1600, image.width]}
+            sizes={`(max-width: 720px) 100vw, (max-width: 1600px) 1600px, ${image.width}px`}
+            quality="max"
+          />
+        </div>
+      ))
+    }
+  </div>
+
+  <!-- Overlay container -->
+  <div
+    id="gallery-overlay"
+    class="fixed inset-0 z-[9999] hidden bg-background/50 backdrop-blur-md"
+  >
+    <div
+      class="relative flex h-full items-center justify-center p-4"
+      id="overlay-container"
+    >
+      <!-- Left navigation arrow -->
+      <button
+        id="prev-button"
+        class="absolute left-5 hidden text-primary opacity-70 transition-opacity duration-300 hover:opacity-100 lg:block"
+        aria-label="Previous image"
+      >
+        <Icon name="lucide:chevron-left" class="size-10" />
+      </button>
+
+      <!-- Right navigation arrow -->
+      <button
+        id="next-button"
+        class="absolute right-5 hidden text-primary opacity-70 transition-opacity duration-300 hover:opacity-100 lg:block"
+        aria-label="Next image"
+      >
+        <Icon name="lucide:chevron-right" class="size-10" />
+      </button>
+
+      <!-- Close button -->
+      <button
+        id="close-button"
+        class="absolute right-5 top-5 text-primary opacity-70 transition-opacity duration-300 hover:opacity-100"
+        aria-label="Close gallery"
+      >
+        <Icon name="lucide:x" class="size-8" />
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Setup the image gallery functionality
+  function setupGallery() {
+    const galleryImages = document.querySelectorAll(
+      '.gallery-image',
+    ) as NodeListOf<HTMLImageElement>
+    const overlay = document.getElementById('gallery-overlay') as HTMLDivElement
+    const overlayContainer = document.getElementById(
+      'overlay-container',
+    ) as HTMLDivElement
+    const prevButton = document.getElementById(
+      'prev-button',
+    ) as HTMLButtonElement
+    const nextButton = document.getElementById(
+      'next-button',
+    ) as HTMLButtonElement
+    const closeButton = document.getElementById(
+      'close-button',
+    ) as HTMLButtonElement
+
+    let activeImage: HTMLImageElement | null = null
+    let originalContainer: Element | null = null
+    let currentIndex = -1
+    let inactivityTimer: number | null = null
+
+    // Button visibility functions
+    function showButtons() {
+      prevButton.style.opacity = '0.7'
+      nextButton.style.opacity = '0.7'
+      closeButton.style.opacity = '0.7'
+
+      // Reset the timer if it exists
+      if (inactivityTimer) {
+        clearTimeout(inactivityTimer)
+      }
+
+      // Start a new timer to hide buttons after 2 seconds
+      inactivityTimer = window.setTimeout(hideButtons, 2000)
+    }
+
+    function hideButtons() {
+      prevButton.style.opacity = '0'
+      nextButton.style.opacity = '0'
+      closeButton.style.opacity = '0'
+    }
+
+    function handleImageClick(event: MouseEvent) {
+      const img = event.target as HTMLImageElement
+
+      // If the overlay is already visible, we're in zoomed state
+      if (!overlay.classList.contains('hidden')) {
+        // Don't close if clicking on navigation buttons
+        if (
+          event.target === prevButton ||
+          event.target === nextButton ||
+          (event.target as Element).closest('#prev-button') ||
+          (event.target as Element).closest('#next-button') ||
+          (event.target as Element).closest('#close-button')
+        ) {
+          event.stopPropagation()
+          return
+        }
+
+        handleCloseZoom()
+        return
+      }
+
+      // Save references for later
+      activeImage = img
+      originalContainer = img.closest('.break-inside-avoid')
+      currentIndex = parseInt(img.dataset.index || '0', 10)
+
+      // Move image to overlay and update its class
+      if (overlayContainer) {
+        overlayContainer.appendChild(img)
+        img.className =
+          'cursor-zoom-out aspect-auto h-auto max-h-[90vh] w-auto max-w-[90vw] rounded-sm transition-all'
+      }
+
+      // Show overlay
+      overlay.classList.remove('hidden')
+      document.body.style.overflow = 'hidden'
+
+      // Show buttons initially when opening the overlay
+      showButtons()
+
+      // Add mousemove listener to the overlay
+      overlay.addEventListener('mousemove', showButtons)
+    }
+
+    function handleCloseZoom() {
+      if (!activeImage || !originalContainer) return
+
+      // Move the image back with updated className
+      activeImage.className =
+        'animate-fade cursor-zoom-in rounded-sm grayscale transition-all hover:grayscale-0 gallery-image'
+      originalContainer.appendChild(activeImage)
+
+      // Hide overlay
+      overlay.classList.add('hidden')
+      document.body.style.overflow = ''
+
+      // Clear any existing timer
+      if (inactivityTimer) {
+        clearTimeout(inactivityTimer)
+        inactivityTimer = null
+      }
+
+      // Remove the mousemove listener
+      overlay.removeEventListener('mousemove', showButtons)
+
+      // Reset references
+      activeImage = null
+      originalContainer = null
+      currentIndex = -1
+    }
+
+    function navigateGallery(direction: number) {
+      // Only navigate if we have an active image
+      if (currentIndex === -1) return
+
+      const imagesArray = Array.from(galleryImages)
+      const totalImages = imagesArray.length
+
+      // Calculate new index with wrapping
+      let newIndex = (currentIndex + direction + totalImages) % totalImages
+
+      // Return current image
+      handleCloseZoom()
+
+      // Simulate click on the new image
+      imagesArray[newIndex].click()
+    }
+
+    // Add click handlers to all gallery images
+    galleryImages.forEach((img) => {
+      img.addEventListener('click', handleImageClick as EventListener)
+    })
+
+    // Close zoom when clicking on the overlay
+    overlay.addEventListener('click', handleCloseZoom)
+
+    // Navigation event listeners with actual navigation functionality
+    prevButton.addEventListener('click', (e) => {
+      e.stopPropagation()
+      navigateGallery(-1)
+    })
+
+    nextButton.addEventListener('click', (e) => {
+      e.stopPropagation()
+      navigateGallery(1)
+    })
+  }
+
+  // Run setup when the DOM is ready
+  document.addEventListener('DOMContentLoaded', setupGallery)
+
+  // Also handle astro:page-load for Astro's view transitions
+  document.addEventListener('astro:page-load', setupGallery)
+</script>

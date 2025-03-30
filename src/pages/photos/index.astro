@@ -1,0 +1,54 @@
+---
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import Container from '@/components/Container.astro'
+import PhotoCollection from '@/components/PhotoCollection.astro'
+import Layout from '@/layouts/Layout.astro'
+import { getCollection } from 'astro:content'
+
+const photoCollections = await getCollection('photos')
+// Sort collections by date (newest first)
+const sortedPhotoCollections = photoCollections.sort((a, b) => {
+  // Convert dates to timestamps or use 0 if date is invalid
+  const dateA = a.data.date ? new Date(a.data.date).getTime() : 0
+  const dateB = b.data.date ? new Date(b.data.date).getTime() : 0
+  return dateB - dateA
+})
+---
+
+<Layout
+  title="Photos"
+  description="A collection of photos from my travels and different periods of my life."
+>
+  <Container class="flex flex-col gap-y-6">
+    <Breadcrumbs items={[{ label: 'Photos', icon: 'lucide:camera' }]} />
+    <section>
+      <div class="min-w-full">
+        <h1 class="mb-6 text-2xl font-bold">Photosets</h1>
+        <p class="mb-6 text-muted-foreground">
+          I'm no photographer, but I like to keep a visual record of the places
+          I've been. These are some JPEGs that have been languishing on my hard
+          drive for a while. Thought it better that they reside somewhere they
+          could be seen. All pictures are shot on my Fujifilm X-T100, DJI Mavic
+          Mini drone, or various versions of my iPhone.
+        </p>
+        <div class="my-4 flex flex-col gap-y-4">
+          {
+            sortedPhotoCollections.length > 0 ? (
+              <ul class="not-prose flex flex-col gap-y-4">
+                {sortedPhotoCollections.map((collection) => (
+                  <li>
+                    <PhotoCollection collection={collection} />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p class="flex h-64 items-center justify-center text-muted-foreground">
+                No photos found.
+              </p>
+            )
+          }
+        </div>
+      </div>
+    </section>
+  </Container>
+</Layout>

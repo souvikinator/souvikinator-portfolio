@@ -1,0 +1,75 @@
+---
+import { formatDate } from '@/lib/utils'
+import { Image } from 'astro:assets'
+import type { CollectionEntry } from 'astro:content'
+import fs from 'node:fs'
+import path from 'node:path'
+import Link from './Link.astro'
+
+type Props = {
+  collection: CollectionEntry<'photos'>
+}
+
+const { collection } = Astro.props as {
+  collection: CollectionEntry<'photos'>
+}
+
+const formattedDate = collection.data.date
+  ? formatDate(collection.data.date)
+  : ''
+const displayDate = collection.data.period || formattedDate
+
+// Count photos in the collection directory
+const photosDirectory = path.join(
+  process.cwd(),
+  'src/assets/images',
+  collection.id,
+)
+let photoCount = 0
+try {
+  const files = fs.readdirSync(photosDirectory)
+  photoCount = files.filter(
+    (file) => !file.startsWith('.') && file.match(/\.(jpg|jpeg|png|webp)$/i),
+  ).length
+} catch (error) {
+  console.error(`Error counting photos in ${collection.id}:`, error)
+}
+---
+
+<div
+  class="not-prose rounded-xl border p-4 transition-all duration-300 ease-in-out hover:bg-secondary/30"
+>
+  <Link
+    href={`/${collection.collection}/${collection.id}`}
+    class="group flex flex-col gap-4 sm:flex-row"
+  >
+    {
+      collection.data.image && (
+        <div class="w-full sm:max-w-[200px] sm:flex-shrink-0">
+          <Image
+            src={collection.data.image}
+            alt={collection.data.name}
+            width={1200}
+            height={630}
+            class="object-cover grayscale group-hover:grayscale-0"
+          />
+        </div>
+      )
+    }
+    <div class="flex-grow">
+      <h3 class="mb-1 text-lg font-semibold">
+        {collection.data.name}
+      </h3>
+      <div
+        class="mb-2 flex flex-wrap items-center gap-x-2 text-xs text-muted-foreground"
+      >
+        <span>{displayDate}</span>
+        <span class="text-muted-foreground">|</span>
+        <span>{photoCount} photos</span>
+      </div>
+      <p class="mb-2 text-sm text-muted-foreground">
+        {collection.data.description}
+      </p>
+    </div>
+  </Link>
+</div>

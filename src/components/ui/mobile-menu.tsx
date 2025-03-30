@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { NAV_LINKS } from '@/consts'
-import { Archive, Briefcase, Home, Tags } from 'lucide-react'
+import { Archive, Briefcase, Home, Camera } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const iconMap = {
   home: () => <Home className="h-5 w-5" />,
   blog: () => <Archive className="h-5 w-5" />,
-  tags: () => <Tags className="h-5 w-5" />,
+  photos: () => <Camera className="h-5 w-5" />,
   work: () => <Briefcase className="h-5 w-5" />,
 } as Record<string, () => JSX.Element>
 
@@ -33,7 +33,7 @@ const MobileMenu = () => {
   }, [])
 
   return (
-    <div className="flex flex-col items-center lg:hidden">
+    <div className="flex flex-col items-center md:hidden">
       <Button
         onClick={toggleMenu}
         className="z-50 bg-transparent p-1 text-primary focus:outline-none"

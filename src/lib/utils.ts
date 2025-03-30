@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-
+import type { ImageMetadata } from 'astro'
 export const isClient = typeof window !== 'undefined'
 
 export function cn(...inputs: ClassValue[]) {
@@ -30,4 +30,37 @@ export function readingTime(html: string) {
 export function isLongArticle(html: string): boolean {
   const minutes = readingTimeMinutes(html)
   return minutes > 4
+}
+
+export async function getAlbumImages(
+  albumId: string,
+): Promise<ImageMetadata[]> {
+  // 1. List all album files from collections path
+  let images = import.meta.glob<{ default: ImageMetadata }>(
+    '/src/assets/images/**/*.{jpeg,jpg}',
+  )
+
+  // 2. Filter images by albumId and exclude those containing 'source'
+  images = Object.fromEntries(
+    Object.entries(images).filter(
+      ([key]) => key.includes(albumId) && !key.includes('source'),
+    ),
+  )
+
+  // 3. Images are promises, so we need to resolve the glob promises
+  const resolvedImages = await Promise.all(
+    Object.values(images).map((image) => image().then((mod) => mod.default)),
+  )
+
+  // 4. Shuffle images in random order
+  resolvedImages.sort(() => Math.random() - 0.5)
+  return resolvedImages
+}
+
+export const debounce = (func: (...args: any[]) => void, delay: number) => {
+  let timeout: NodeJS.Timeout
+  return (...args: any[]) => {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => func(...args), delay)
+  }
 }
