@@ -349,3 +349,15 @@
     }
   }
 }
+
+.gallery-item {
+  @apply rounded-sm transition-all;
+}
+
+.gallery-image {
+  @apply animate-fade cursor-zoom-in grayscale hover:grayscale-0;
+}
+
+.gallery-image-zoom {
+  @apply aspect-auto h-auto max-h-[90vh] w-auto max-w-[90vw] cursor-zoom-out;
+}

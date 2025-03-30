@@ -11,7 +11,7 @@ interface Props {
 const { name, images } = Astro.props
 ---
 
-<div class="photo-gallery">
+<div>
   <div class="columns-1 gap-5 sm:columns-2 sm:gap-2 md:columns-3">
     {
       images.map((image, index) => (
@@ -21,14 +21,14 @@ const { name, images } = Astro.props
             alt={`Photo ${index + 1} from my trip to ${name}`}
             loading={index < 15 ? 'eager' : 'lazy'}
             decoding={index < 15 ? 'sync' : 'async'}
-            class="animate-fade gallery-image cursor-zoom-in rounded-sm grayscale transition-all hover:grayscale-0"
+            class="gallery-item gallery-image"
             draggable={false}
             data-index={index}
             width={image.width}
             height={image.height}
             widths={[360, 720, 1600, image.width]}
             sizes={`(max-width: 720px) 100vw, (max-width: 1600px) 1600px, ${image.width}px`}
-            quality="max"
+            quality="high"
           />
         </div>
       ))
@@ -78,7 +78,7 @@ const { name, images } = Astro.props
   // Setup the image gallery functionality
   function setupGallery() {
     const galleryImages = document.querySelectorAll(
-      '.gallery-image',
+      '.gallery-item',
     ) as NodeListOf<HTMLImageElement>
     const overlay = document.getElementById('gallery-overlay') as HTMLDivElement
     const overlayContainer = document.getElementById(
@@ -149,8 +149,7 @@ const { name, images } = Astro.props
       // Move image to overlay and update its class
       if (overlayContainer) {
         overlayContainer.appendChild(img)
-        img.className =
-          'cursor-zoom-out aspect-auto h-auto max-h-[90vh] w-auto max-w-[90vw] rounded-sm transition-all'
+        img.className = 'gallery-item gallery-image-zoom'
       }
 
       // Show overlay
@@ -168,8 +167,7 @@ const { name, images } = Astro.props
       if (!activeImage || !originalContainer) return
 
       // Move the image back with updated className
-      activeImage.className =
-        'animate-fade cursor-zoom-in rounded-sm grayscale transition-all hover:grayscale-0 gallery-image'
+      activeImage.className = 'gallery-item gallery-image'
       originalContainer.appendChild(activeImage)
 
       // Hide overlay
