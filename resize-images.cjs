@@ -5,6 +5,13 @@ const crypto = require('crypto')
 
 // Path to the photos directory containing all the folders to process
 const photosDir = path.join(__dirname, 'src/content/photos')
+// New path for public images
+const publicImagesDir = path.join(__dirname, 'public/images')
+
+// Create public/images directory if it doesn't exist
+if (!fs.existsSync(publicImagesDir)) {
+  fs.mkdirSync(publicImagesDir, { recursive: true })
+}
 
 // Get all directories within the photos directory
 const baseDirs = fs
@@ -39,8 +46,9 @@ baseDirs.forEach((baseDir) => {
 
   // Create output directory if it doesn't exist
   const outputDir = path.join(__dirname, 'src/assets/images', baseDir)
+  const publicOutputDir = path.join(publicImagesDir, baseDir)
 
-  // Clear the output directory if it exists
+  // Clear the normal output directory if it exists
   if (fs.existsSync(outputDir)) {
     console.log(`Clearing existing output directory: ${outputDir}`)
     fs.readdirSync(outputDir).forEach((file) => {
@@ -48,8 +56,18 @@ baseDirs.forEach((baseDir) => {
       fs.unlinkSync(filePath)
     })
   } else {
-    // Create output directory if it doesn't exist
     fs.mkdirSync(outputDir, { recursive: true })
+  }
+
+  // Clear the public output directory if it exists
+  if (fs.existsSync(publicOutputDir)) {
+    console.log(`Clearing existing public output directory: ${publicOutputDir}`)
+    fs.readdirSync(publicOutputDir).forEach((file) => {
+      const filePath = path.join(publicOutputDir, file)
+      fs.unlinkSync(filePath)
+    })
+  } else {
+    fs.mkdirSync(publicOutputDir, { recursive: true })
   }
 
   console.log(`Processing directory: ${baseDir}`)
@@ -64,7 +82,8 @@ baseDirs.forEach((baseDir) => {
     // Process each file
     let processedCount = 0
     const totalFiles = files.filter(
-      (file) => file !== '.DS_Store' && file.match(/\.(jpg|jpeg|JPG|JPEG)$/i),
+      (file) =>
+        file !== '.DS_Store' && file.match(/\.(jpg|jpeg|JPG|JPEG|png|PNG)$/i),
     ).length
 
     if (totalFiles === 0) {
@@ -79,8 +98,11 @@ baseDirs.forEach((baseDir) => {
       const inputPath = path.join(inputDir, file)
 
       // Skip non-image files and .DS_Store
-      if (file === '.DS_Store' || !file.match(/\.(jpg|jpeg|JPG|JPEG)$/i)) {
-        console.log(`Skipping ${file} - not a JPEG image`)
+      if (
+        file === '.DS_Store' ||
+        !file.match(/\.(jpg|jpeg|JPG|JPEG|png|PNG)$/i)
+      ) {
+        console.log(`Skipping ${file} - not a JPEG or PNG image`)
         return
       }
 
@@ -96,35 +118,56 @@ baseDirs.forEach((baseDir) => {
       // Add hash to tracking set
       generatedHashes.add(randomHash)
 
-      const outputPath = path.join(outputDir, `${randomHash}${extension}`)
+      const fullSizeOutputPath = path.join(
+        publicOutputDir,
+        `${randomHash}.webp`,
+      )
+      const previewOutputPath = path.join(
+        outputDir,
+        `${randomHash}-preview${extension}`,
+      )
 
-      // Enhanced resizing with maximum quality preservation
-      sharp(inputPath, { failOnError: false })
+      // Process full-size version (highest quality)
+      const fullSizePromise = sharp(inputPath, { failOnError: false })
         .rotate() // Auto-rotate based on EXIF orientation
         .resize({
           height: 900,
           fit: sharp.fit.contain,
-          withoutEnlargement: true, // Don't enlarge if image height < 900
-          kernel: sharp.kernel.lanczos3, // Use high-quality Lanczos resampling
+          withoutEnlargement: true,
+          kernel: sharp.kernel.lanczos3,
+        })
+        .webp({
+          quality: 100,
+          effort: 6,
+        })
+        .toFile(fullSizeOutputPath)
+
+      // Process preview version (smaller size, lower quality)
+      const previewPromise = sharp(inputPath, { failOnError: false })
+        .rotate()
+        .resize({
+          width: 610,
+          fit: sharp.fit.contain,
+          withoutEnlargement: true,
+          kernel: sharp.kernel.lanczos3,
         })
         .jpeg({
-          quality: 92,
+          quality: 80,
           progressive: true,
           mozjpeg: true,
-          trellisQuantisation: true,
-          overshootDeringing: true,
-          optimizeScans: true,
-          quantisationTable: 3,
         })
-        .toFile(outputPath)
+        .toFile(previewOutputPath)
+
+      // Wait for both versions to be processed
+      Promise.all([fullSizePromise, previewPromise])
         .then(() => {
           processedCount++
           console.log(
-            `[${baseDir}] Resized ${file} to ${randomHash}${extension} (${processedCount}/${totalFiles})`,
+            `[${baseDir}] Processed ${file} to ${randomHash}.webp (full) and ${randomHash}-preview${extension} (preview) (${processedCount}/${totalFiles})`,
           )
         })
         .catch((err) => {
-          console.error(`[${baseDir}] Error resizing ${file}:`, err)
+          console.error(`[${baseDir}] Error processing ${file}:`, err)
         })
     })
   })

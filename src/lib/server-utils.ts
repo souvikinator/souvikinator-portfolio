@@ -1,4 +1,6 @@
 import { getEntry } from 'astro:content'
+import path from 'path'
+import fs from 'fs'
 
 export async function parseAuthors(authors: string[]) {
   if (!authors || authors.length === 0) return []
@@ -24,4 +26,17 @@ export async function parseAuthors(authors: string[]) {
   }
 
   return await Promise.all(authors.map(parseAuthor))
+}
+
+export async function getPhotoCount(albumId: string): Promise<number> {
+  const publicDir = path.join(process.cwd(), 'public', 'images', albumId)
+
+  try {
+    const files = fs.readdirSync(publicDir)
+    const webpFiles = files.filter((file) => file.endsWith('.webp'))
+    return webpFiles.length
+  } catch (error) {
+    console.error('Error counting photos:', error)
+    return 0
+  }
 }

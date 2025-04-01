@@ -5,10 +5,27 @@ import { Image } from 'astro:assets'
 
 interface Props {
   name: string
+  id: string
   images: ImageMetadata[]
 }
 
-const { name, images } = Astro.props
+const { name, images, id } = Astro.props
+
+// Create a map of full-size image URLs by replacing -preview in the src and stripping query params
+const fullSizeImages = images.map((img) => ({
+  ...img,
+  src: `/images/${id}/${img.src
+    .split('/')
+    .pop()
+    ?.replace('-preview', '')
+    .split('?')[0]
+    .replace(/\.(jpe?g|png)$/i, '.webp')
+    .replace(/(\.[^.]+\.webp)$/, (match) => {
+      // Keep only the first hash in the filename
+      const parts = match.split('.')
+      return `${parts[0]}.webp`
+    })}`,
+}))
 ---
 
 <div>
@@ -24,11 +41,12 @@ const { name, images } = Astro.props
             class="gallery-item gallery-image"
             draggable={false}
             data-index={index}
+            data-fullsize={fullSizeImages[index].src}
             width={image.width}
             height={image.height}
             widths={[360, 720, 1600, image.width]}
-            sizes={`(max-width: 720px) 100vw, (max-width: 1600px) 1600px, ${image.width}px`}
-            quality="high"
+            sizes={`(max-width: 360px) 360px, (max-width: 720px) 720px, (max-width: 1200px) 1200px, ${image.width}px`}
+            quality="medium"
           />
         </div>
       ))
@@ -41,13 +59,13 @@ const { name, images } = Astro.props
     class="fixed inset-0 z-[9999] hidden bg-background/50 backdrop-blur-md"
   >
     <div
-      class="relative flex h-full items-center justify-center p-4"
+      class="relative flex h-full items-center justify-center"
       id="overlay-container"
     >
       <!-- Left navigation arrow -->
       <button
         id="prev-button"
-        class="absolute left-5 hidden text-primary opacity-70 transition-opacity duration-300 hover:opacity-100 lg:block"
+        class="absolute left-5 hidden py-5 text-primary opacity-70 transition-opacity duration-300 hover:opacity-100 xl:block"
         aria-label="Previous image"
       >
         <Icon name="lucide:chevron-left" class="size-10" />
@@ -56,7 +74,7 @@ const { name, images } = Astro.props
       <!-- Right navigation arrow -->
       <button
         id="next-button"
-        class="absolute right-5 hidden text-primary opacity-70 transition-opacity duration-300 hover:opacity-100 lg:block"
+        class="absolute right-5 hidden py-5 text-primary opacity-70 transition-opacity duration-300 hover:opacity-100 xl:block"
         aria-label="Next image"
       >
         <Icon name="lucide:chevron-right" class="size-10" />
@@ -75,7 +93,7 @@ const { name, images } = Astro.props
 </div>
 
 <script>
-  // Setup the image gallery functionality
+  // Setup the gallery functionality
   function setupGallery() {
     const galleryImages = document.querySelectorAll(
       '.gallery-item',
@@ -95,7 +113,6 @@ const { name, images } = Astro.props
     ) as HTMLButtonElement
 
     let activeImage: HTMLImageElement | null = null
-    let originalContainer: Element | null = null
     let currentIndex = -1
     let inactivityTimer: number | null = null
 
@@ -121,11 +138,10 @@ const { name, images } = Astro.props
     }
 
     function handleImageClick(event: MouseEvent) {
-      const img = event.target as HTMLImageElement
+      const previewImg = event.target as HTMLImageElement
 
-      // If the overlay is already visible, we're in zoomed state
+      // If the overlay is already visible, handle closing
       if (!overlay.classList.contains('hidden')) {
-        // Don't close if clicking on navigation buttons
         if (
           event.target === prevButton ||
           event.target === nextButton ||
@@ -141,51 +157,72 @@ const { name, images } = Astro.props
         return
       }
 
-      // Save references for later
-      activeImage = img
-      originalContainer = img.closest('.break-inside-avoid')
-      currentIndex = parseInt(img.dataset.index || '0', 10)
+      // Create container for the full-size image
+      const imageContainer = document.createElement('div')
+      imageContainer.className = 'relative flex items-center justify-center'
 
-      // Move image to overlay and update its class
+      // Create the full-size image element
+      const fullSizeImg = document.createElement('img')
+      fullSizeImg.className = 'gallery-image-zoom loading'
+      fullSizeImg.alt = previewImg.alt
+      fullSizeImg.dataset.index = previewImg.dataset.index
+
+      // Add image to container
+      imageContainer.appendChild(fullSizeImg)
+
+      // Save references
+      activeImage = fullSizeImg
+      currentIndex = parseInt(previewImg.dataset.index || '0', 10)
+
+      // Load the full-size image
+      fullSizeImg.onload = () => {
+        fullSizeImg.classList.remove('loading')
+        fullSizeImg.classList.add('loaded')
+      }
+
+      // Set the source from data-fullsize attribute
+      fullSizeImg.src = previewImg.dataset.fullsize || ''
+
+      // Add container to overlay
       if (overlayContainer) {
-        overlayContainer.appendChild(img)
-        img.className = 'gallery-item gallery-image-zoom'
+        overlayContainer.appendChild(imageContainer)
       }
 
       // Show overlay
       overlay.classList.remove('hidden')
       document.body.style.overflow = 'hidden'
 
-      // Show buttons initially when opening the overlay
+      // Show buttons initially
       showButtons()
 
-      // Add mousemove listener to the overlay
+      // Add mousemove listener
       overlay.addEventListener('mousemove', showButtons)
     }
 
     function handleCloseZoom() {
-      if (!activeImage || !originalContainer) return
+      if (!activeImage) return
 
-      // Move the image back with updated className
-      activeImage.className = 'gallery-item gallery-image'
-      originalContainer.appendChild(activeImage)
+      // Find and remove the image container
+      const container = activeImage.parentElement
+      if (container) {
+        container.remove()
+      }
 
       // Hide overlay
       overlay.classList.add('hidden')
       document.body.style.overflow = ''
 
-      // Clear any existing timer
+      // Clear timer
       if (inactivityTimer) {
         clearTimeout(inactivityTimer)
         inactivityTimer = null
       }
 
-      // Remove the mousemove listener
+      // Remove mousemove listener
       overlay.removeEventListener('mousemove', showButtons)
 
       // Reset references
       activeImage = null
-      originalContainer = null
       currentIndex = -1
     }
 

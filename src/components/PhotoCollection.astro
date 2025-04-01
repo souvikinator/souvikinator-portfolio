@@ -1,9 +1,8 @@
 ---
+import { getPhotoCount } from '@/lib/server-utils'
 import { formatDate } from '@/lib/utils'
 import { Image } from 'astro:assets'
 import type { CollectionEntry } from 'astro:content'
-import fs from 'node:fs'
-import path from 'node:path'
 import Link from './Link.astro'
 
 type Props = {
@@ -19,21 +18,8 @@ const formattedDate = collection.data.date
   : ''
 const displayDate = collection.data.period || formattedDate
 
-// Count photos in the collection directory
-const photosDirectory = path.join(
-  process.cwd(),
-  'src/assets/images',
-  collection.id,
-)
-let photoCount = 0
-try {
-  const files = fs.readdirSync(photosDirectory)
-  photoCount = files.filter(
-    (file) => !file.startsWith('.') && file.match(/\.(jpg|jpeg|png|webp)$/i),
-  ).length
-} catch (error) {
-  console.error(`Error counting photos in ${collection.id}:`, error)
-}
+// Get photo count using the utility function
+const photoCount = await getPhotoCount(collection.id)
 ---
 
 <div
@@ -49,9 +35,10 @@ try {
           <Image
             src={collection.data.image}
             alt={collection.data.name}
-            width={1200}
-            height={630}
+            width={600}
+            height={338}
             class="rounded-sm object-cover grayscale transition-all group-hover:grayscale-0"
+            quality="medium"
           />
         </div>
       )

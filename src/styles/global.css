@@ -356,5 +356,13 @@
 }
 
 .gallery-image-zoom {
-  @apply aspect-auto h-auto max-h-[90vh] w-auto max-w-[90vw] cursor-zoom-out;
+  @apply mx-auto aspect-auto h-auto max-h-[90vh] w-auto max-w-[90vw] cursor-zoom-out object-contain;
+}
+
+.gallery-image-zoom.loading {
+  @apply blur-sm transition-[filter] duration-300;
+}
+
+.gallery-image-zoom.loaded {
+  @apply blur-none;
 }

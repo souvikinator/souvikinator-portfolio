@@ -37,13 +37,16 @@ export async function getAlbumImages(
 ): Promise<ImageMetadata[]> {
   // 1. List all album files from collections path
   let images = import.meta.glob<{ default: ImageMetadata }>(
-    '/src/assets/images/**/*.{jpeg,jpg}',
+    '/src/assets/images/**/*.{jpeg,jpg,png,webp}',
   )
 
-  // 2. Filter images by albumId and exclude those containing 'source'
+  // 2. Filter images by albumId, exclude source files, and only include preview images
   images = Object.fromEntries(
     Object.entries(images).filter(
-      ([key]) => key.includes(albumId) && !key.includes('source'),
+      ([key]) =>
+        key.includes(albumId) &&
+        !key.includes('source') &&
+        key.includes('-preview'),
     ),
   )
 
