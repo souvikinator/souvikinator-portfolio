@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
+import { cn } from '@/lib/utils'
 
 interface NoiseOverlayProps {
   image: string
@@ -29,7 +30,7 @@ export function NoiseOverlay({ image, className = '' }: NoiseOverlayProps) {
 
   return (
     <div>
-      <div className={`relative ${className} mb-8`}>
+      <div className={cn('relative mb-8', className)}>
         <img src={image} alt="Base image" className="mb-1 h-full w-full" />
         {noiseEnabled && (
           <div
