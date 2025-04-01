@@ -65,6 +65,9 @@ create_subset() {
 echo "Checking dependencies..."
 check_and_install_dependencies
 
+echo "Cleaning up old subset fonts..."
+find "$SUBSET_DIR" -type f -name "*subset*" -delete
+
 echo "Extracting text content from build..."
 extract_text
 

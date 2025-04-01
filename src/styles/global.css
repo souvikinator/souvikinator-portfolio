@@ -20,24 +20,24 @@
 
 @layer base {
   :root {
-    --flexoki-black: 0, 3.23%, 6.08%;
-    --flexoki-black-rgb: 16, 15, 15;
-    --flexoki-paper: 48, 100%, 97.06%;
-    --flexoki-paper-rgb: 254, 252, 240;
-    --flexoki-200-rgb: 206, 205, 195;
-    --flexoki-50: 50.77, 33.33%, 92.35%;
-    --flexoki-100: 50.77, 20.63%, 87.65%;
-    --flexoki-150: 50, 13.95%, 83.14%;
-    --flexoki-200: 54.55, 10.09%, 78.63%;
-    --flexoki-300: 49.09, 7.1%, 69.61%;
-    --flexoki-400: 46.67, 4.48%, 60.59%;
-    --flexoki-500: 42.86, 2.83%, 51.57%;
-    --flexoki-600: 50, 2.78%, 42.35%;
-    --flexoki-700: 45, 2.35%, 33.33%;
-    --flexoki-800: 30, 3.23%, 24.31%;
-    --flexoki-850: 40, 2.97%, 19.8%;
-    --flexoki-900: 30, 2.56%, 15.29%;
-    --flexoki-950: 30, 3.7%, 10.59%;
+    --flexoki-black: 16.96% 0.002 17.32;
+    --flexoki-black-rgb: 22.28% 0.002 67.7;
+    --flexoki-paper: 99.01% 0.016 95.22;
+    --flexoki-paper-rgb: 0.99 0.0159 98.99;
+    --flexoki-200-rgb: 0.85 0.0137 102.05;
+    --flexoki-50: 95.37% 0.015 98.29;
+    --flexoki-100: 91.74% 0.015 98.3;
+    --flexoki-150: 88.1% 0.014 97.46;
+    --flexoki-200: 84.63% 0.014 102.05;
+    --flexoki-300: 77.21% 0.013 96.47;
+    --flexoki-400: 0.7 0.0103 93.62;
+    --flexoki-500: 61.69% 0.008 88.67;
+    --flexoki-600: 53.75% 0.008 97.45;
+    --flexoki-700: 45.31% 0.005 91.5;
+    --flexoki-800: 36.51% 0.004 67.69;
+    --flexoki-850: 32.14% 0.004 84.58;
+    --flexoki-900: 27.34% 0.002 67.73;
+    --flexoki-950: 22.28% 0.002 67.7;
 
     --flexoki-red-50: #ffe1d5;
     --flexoki-red-100: #ffcabb;
@@ -157,26 +157,9 @@
 
     --flexoki-re: var(--flexoki-red-600);
 
-    --additive: 112 50% 36%;
-    --additive-foreground: 0 0% 9%;
-  }
+    --additive: 0.56 0.1497 141.12;
+    --additive-foreground: 0.2 0 0;
 
-  .dark {
-    --flexoki-bg: var(--flexoki-black);
-    --flexoki-bg-2: var(--flexoki-black-rgb);
-
-    --flexoki-ui: var(--flexoki-900);
-    --flexoki-ui-2: var(--flexoki-850);
-    --flexoki-ui-3: var(--flexoki-800);
-
-    --flexoki-tx: var(--flexoki-200);
-    --flexoki-tx-2: var(--flexoki-500);
-    --flexoki-tx-3: var(--flexoki-700);
-
-    --flexoki-re: var(--flexoki-red-400);
-  }
-
-  :root {
     --background: var(--flexoki-bg);
     --foreground: var(--flexoki-tx);
     --card: var(--flexoki-bg);
@@ -197,6 +180,21 @@
     --input: var(--flexoki-ui-2);
     --ring: var(--flexoki-ui-3);
     --radius: 0.5rem;
+  }
+
+  .dark {
+    --flexoki-bg: var(--flexoki-black);
+    --flexoki-bg-2: var(--flexoki-black-rgb);
+
+    --flexoki-ui: var(--flexoki-900);
+    --flexoki-ui-2: var(--flexoki-850);
+    --flexoki-ui-3: var(--flexoki-800);
+
+    --flexoki-tx: var(--flexoki-200);
+    --flexoki-tx-2: var(--flexoki-500);
+    --flexoki-tx-3: var(--flexoki-700);
+
+    --flexoki-re: var(--flexoki-red-400);
   }
 
   *,
@@ -228,7 +226,6 @@
 
       &::before {
         filter: invert(1);
-        opacity: 0.9;
       }
     }
 

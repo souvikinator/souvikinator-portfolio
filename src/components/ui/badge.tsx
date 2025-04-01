@@ -4,14 +4,13 @@ import { Hash } from 'lucide-react'
 import * as React from 'react'
 
 const badgeVariants = cva(
-  'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs transition-colors focus:outline-none focus:ring focus:ring-ring',
+  'inline-flex items-center rounded-sm border px-2.5 py-0.5 text-xs transition-colors focus:outline-none focus:ring focus:ring-ring',
   {
     variants: {
       variant: {
         default:
           'border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80',
-        secondary:
-          'border-transparent bg-secondary text-primary hover:bg-secondary/80',
+        secondary: 'bg-secondary text-primary hover:opacity-80',
         destructive:
           'border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80',
         outline: 'text-foreground',

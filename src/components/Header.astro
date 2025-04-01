@@ -8,8 +8,9 @@ import Logo from './Logo.astro'
 ---
 
 <header
-  class="sticky top-0 z-10 bg-background/50 backdrop-blur-md"
+  class="sticky top-0 z-10 transition-all duration-300"
   transition:persist
+  id="main-header"
 >
   <Container>
     <div class="flex flex-wrap items-center justify-between gap-4 py-4">
@@ -38,3 +39,19 @@ import Logo from './Logo.astro'
     </div>
   </Container>
 </header>
+
+<script>
+  const header = document.getElementById('main-header')
+
+  if (header) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 0) {
+        header.classList.add('bg-background/50', 'backdrop-blur-md')
+        header.classList.remove('bg-transparent')
+      } else {
+        header.classList.remove('bg-background/50', 'backdrop-blur-md')
+        header.classList.add('bg-transparent')
+      }
+    })
+  }
+</script>

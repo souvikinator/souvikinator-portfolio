@@ -9,6 +9,7 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "fonts": "./process-fonts.sh",
     "prettier": "prettier --write .",
     "resize-images": "node resize-images.cjs"
   },
