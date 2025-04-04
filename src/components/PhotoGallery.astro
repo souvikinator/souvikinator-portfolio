@@ -84,8 +84,6 @@ const fullSizeImages = await getFullSizeImages(images, id)
 </div>
 
 <script>
-  const loadedImageSrcs = new Set<string>()
-
   // Setup the gallery functionality
   function setupGallery() {
     const galleryImages = document.querySelectorAll(
@@ -150,7 +148,7 @@ const fullSizeImages = await getFullSizeImages(images, id)
       }
 
       const imageContainer = document.createElement('div')
-      imageContainer.className = 'relative flex items-center justify-center'
+      imageContainer.className = 'image-container'
 
       const fullWidth = parseInt(previewImg.dataset.fullwidth || '0', 10)
       const fullHeight = parseInt(previewImg.dataset.fullheight || '0', 10)
@@ -161,7 +159,6 @@ const fullSizeImages = await getFullSizeImages(images, id)
       const fullSizeImg = document.createElement('img')
       fullSizeImg.src = fullSizeSrc
       fullSizeImg.alt = previewImg.alt
-      fullSizeImg.className = 'gallery-image-zoom-loading'
       fullSizeImg.width = fullWidth
       fullSizeImg.height = fullHeight
       fullSizeImg.style.zIndex = '2'
@@ -170,32 +167,29 @@ const fullSizeImages = await getFullSizeImages(images, id)
       activeImage = fullSizeImg
       currentIndex = parseInt(previewImg.dataset.index || '0', 10)
 
-      // Check if full-size image is cached
       if (fullSizeImg.complete && fullSizeImg.naturalWidth > 0) {
-        fullSizeImg.className = 'gallery-image-zoom-loaded'
+        fullSizeImg.className = 'gallery-image-zoom gallery-image-zoom-loaded'
         imageContainer.appendChild(fullSizeImg)
       } else {
-        // Add placeholder if not cached
+        fullSizeImg.className = 'gallery-image-zoom'
+
+        fullSizeImg.onload = () => {
+          fullSizeImg.classList.add('gallery-image-zoom-loaded')
+          placeholderImg.classList.add('gallery-placeholder-loaded')
+        }
+
         const placeholderImg = document.createElement('img')
         placeholderImg.src = placeholderSrc
         placeholderImg.alt = previewImg.alt
-        placeholderImg.className = 'gallery-placeholder-loading'
+        placeholderImg.className = 'gallery-placeholder'
         placeholderImg.width = fullWidth
         placeholderImg.height = fullHeight
-        placeholderImg.style.zIndex = '1'
-
-        fullSizeImg.onload = () => {
-          fullSizeImg.className = 'gallery-image-zoom-loaded'
-          placeholderImg.className = 'gallery-placeholder-loaded'
-          loadedImageSrcs.add(fullSizeImg.src)
-        }
 
         imageContainer.appendChild(placeholderImg)
         imageContainer.appendChild(fullSizeImg)
       }
 
       overlayContainer.appendChild(imageContainer)
-
       overlay.classList.remove('hidden')
       document.body.style.overflow = 'hidden'
       showButtons()
@@ -237,39 +231,9 @@ const fullSizeImages = await getFullSizeImages(images, id)
       const newIndex = (currentIndex + direction + totalImages) % totalImages
       const targetImg = imagesArray[newIndex]
 
-      const fullsizeSrc = targetImg.dataset.fullsize || ''
-      const width = parseInt(targetImg.dataset.fullwidth || '0', 10)
-      const height = parseInt(targetImg.dataset.fullheight || '0', 10)
-      const alt = targetImg.alt
-
       handleCloseZoom()
 
-      // If already loaded, skip placeholder and go direct
-      if (loadedImageSrcs.has(fullsizeSrc)) {
-        const imageContainer = document.createElement('div')
-        imageContainer.className = 'relative flex items-center justify-center'
-
-        const img = document.createElement('img')
-        img.src = fullsizeSrc
-        img.alt = alt
-        img.width = width
-        img.height = height
-        img.className = 'gallery-image-zoom-loaded'
-        img.style.zIndex = '2'
-
-        activeImage = img
-        currentIndex = newIndex
-
-        imageContainer.appendChild(img)
-        overlayContainer.appendChild(imageContainer)
-        overlay.classList.remove('hidden')
-        document.body.style.overflow = 'hidden'
-        showButtons()
-        overlay.addEventListener('mousemove', showButtons)
-      } else {
-        // Fallback to default loading via click (progressive)
-        targetImg.click()
-      }
+      targetImg.click()
     }
 
     // Add click handlers to all gallery images
