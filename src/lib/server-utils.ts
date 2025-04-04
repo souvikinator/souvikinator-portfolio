@@ -75,7 +75,7 @@ export async function generateBlurPlaceholder(
         channels: 4,
       },
     })
-      .webp({ quality: 80 })
+      .webp({ quality: 60 })
       .toBuffer()
 
     return `data:image/webp;base64,${webpBuffer.toString('base64')}`
