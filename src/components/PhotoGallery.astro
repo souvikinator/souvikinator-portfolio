@@ -33,6 +33,7 @@ const fullSizeImages = await getFullSizeImages(images, id)
             data-fullwidth={fullSizeImages[index].width}
             data-fullheight={fullSizeImages[index].height}
             data-placeholder={fullSizeImages[index].blurDataUrl}
+            data-hash={fullSizeImages[index].hash}
             width={image.width}
             height={image.height}
             widths={[360, 720, 1600, image.width]}
@@ -62,6 +63,38 @@ const fullSizeImages = await getFullSizeImages(images, id)
         <Icon name="lucide:chevron-left" class="size-10" />
       </button>
 
+      <div id="image-stack" class="relative grid">
+        <div
+          id="image-container-placeholder"
+          class="image-container z-[1] col-start-1 row-start-1"
+        >
+          {
+            fullSizeImages.map((image, index) => (
+              <img
+                id={image.hash}
+                src={image.blurDataUrl}
+                alt={`Placeholder for photo ${index + 1} from my trip to ${name}`}
+                class="gallery-placeholder hidden"
+                width={image.width}
+                height={image.height}
+                style={{
+                  width: `${image.width}px`,
+                  height: `${image.height}px`,
+                }}
+                decoding="sync"
+                loading="eager"
+              />
+            ))
+          }
+        </div>
+
+        <div
+          id="image-container"
+          class="image-container z-[2] col-start-1 row-start-1"
+        >
+        </div>
+      </div>
+
       <!-- Right navigation arrow -->
       <button
         id="next-button"
@@ -90,9 +123,6 @@ const fullSizeImages = await getFullSizeImages(images, id)
       '.gallery-item',
     ) as NodeListOf<HTMLImageElement>
     const overlay = document.getElementById('gallery-overlay') as HTMLDivElement
-    const overlayContainer = document.getElementById(
-      'overlay-container',
-    ) as HTMLDivElement
     const prevButton = document.getElementById(
       'prev-button',
     ) as HTMLButtonElement
@@ -102,6 +132,9 @@ const fullSizeImages = await getFullSizeImages(images, id)
     const closeButton = document.getElementById(
       'close-button',
     ) as HTMLButtonElement
+    const placeholderImages = document.querySelectorAll(
+      '.gallery-placeholder',
+    ) as NodeListOf<HTMLImageElement>
 
     let activeImage: HTMLImageElement | null = null
     let currentIndex = -1
@@ -147,49 +180,50 @@ const fullSizeImages = await getFullSizeImages(images, id)
         return
       }
 
-      const imageContainer = document.createElement('div')
-      imageContainer.className = 'image-container'
+      const imageContainer = document.getElementById(
+        'image-container',
+      ) as HTMLDivElement
 
       const fullWidth = parseInt(previewImg.dataset.fullwidth || '0', 10)
       const fullHeight = parseInt(previewImg.dataset.fullheight || '0', 10)
       const fullSizeSrc = previewImg.dataset.fullsize || ''
-      const placeholderSrc = previewImg.dataset.placeholder || ''
+      const imageHash = previewImg.dataset.hash || ''
 
       // Create full-size image
       const fullSizeImg = document.createElement('img')
+      fullSizeImg.id = `full-${imageHash}`
+      fullSizeImg.className = 'gallery-image-zoom opacity-0'
       fullSizeImg.src = fullSizeSrc
       fullSizeImg.alt = previewImg.alt
+      fullSizeImg.draggable = false
       fullSizeImg.width = fullWidth
       fullSizeImg.height = fullHeight
       fullSizeImg.style.zIndex = '2'
 
-      // Save refs
       activeImage = fullSizeImg
       currentIndex = parseInt(previewImg.dataset.index || '0', 10)
 
+      imageContainer.appendChild(fullSizeImg)
+
       if (fullSizeImg.complete && fullSizeImg.naturalWidth > 0) {
-        fullSizeImg.className = 'gallery-image-zoom gallery-image-zoom-loaded'
-        imageContainer.appendChild(fullSizeImg)
+        fullSizeImg.classList.add('gallery-image-zoom-loaded')
       } else {
-        fullSizeImg.className = 'gallery-image-zoom'
+        // Show current placeholder
+        const placeholderImg = document.getElementById(
+          imageHash,
+        ) as HTMLImageElement
+
+        if (placeholderImg) {
+          placeholderImg.classList.remove('hidden')
+          placeholderImg.style.zIndex = '1'
+        }
 
         fullSizeImg.onload = () => {
           fullSizeImg.classList.add('gallery-image-zoom-loaded')
-          placeholderImg.classList.add('gallery-placeholder-loaded')
+          placeholderImg?.classList.add('gallery-placeholder-loaded')
         }
-
-        const placeholderImg = document.createElement('img')
-        placeholderImg.src = placeholderSrc
-        placeholderImg.alt = previewImg.alt
-        placeholderImg.className = 'gallery-placeholder'
-        placeholderImg.width = fullWidth
-        placeholderImg.height = fullHeight
-
-        imageContainer.appendChild(placeholderImg)
-        imageContainer.appendChild(fullSizeImg)
       }
 
-      overlayContainer.appendChild(imageContainer)
       overlay.classList.remove('hidden')
       document.body.style.overflow = 'hidden'
       showButtons()
@@ -199,10 +233,16 @@ const fullSizeImages = await getFullSizeImages(images, id)
     function handleCloseZoom() {
       if (!activeImage) return
 
-      // Find and remove the image container
-      const container = activeImage.parentElement
-      if (container) {
-        container.remove()
+      // Find the current placeholder by hash and hide it
+      const currentHash = activeImage.id.replace('full-', '')
+      const currentPlaceholder = document.getElementById(currentHash)
+      if (currentPlaceholder) {
+        currentPlaceholder.classList.remove('gallery-placeholder-loaded')
+        currentPlaceholder.classList.add('hidden')
+      }
+
+      if (activeImage) {
+        activeImage.remove()
       }
 
       // Hide overlay

@@ -48,10 +48,10 @@ export async function getPhotoCount(albumId: string): Promise<number> {
 
 interface FullSizeImage extends ImageMetadata {
   src: string
+  hash: string
   width: number
   height: number
-  blurhash?: string
-  blurDataUrl?: string
+  blurDataUrl: string
 }
 
 /**
@@ -60,10 +60,12 @@ interface FullSizeImage extends ImageMetadata {
 export async function generateBlurPlaceholder(
   imagePath: string,
   blurSize = 32,
+  blurSigma = 2.5,
 ): Promise<string | undefined> {
   try {
     const { data, info } = await sharp(imagePath)
       .resize(blurSize, blurSize, { fit: 'inside' })
+      .blur(blurSigma)
       .raw()
       .ensureAlpha()
       .toBuffer({ resolveWithObject: true })
@@ -109,6 +111,8 @@ export async function getFullSizeImages(
           return `${parts[0]}.webp`
         })
 
+      const hash = fileName.replace('-preview', '').split('?')[0].split('.')[0]
+
       const fullSizePath = join(
         process.cwd(),
         'public',
@@ -141,7 +145,8 @@ export async function getFullSizeImages(
         src: `/images/${id}/${cleanedFileName}`,
         width,
         height,
-        blurDataUrl,
+        hash,
+        blurDataUrl: blurDataUrl || '',
       }
     }),
   )

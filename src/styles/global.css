@@ -360,7 +360,7 @@
 }
 
 .gallery-placeholder {
-  @apply absolute inset-0 z-[1] h-full w-full object-contain blur-sm transition-all duration-100 ease-in-out;
+  @apply relative z-[1] h-full max-h-[90vh] w-full max-w-[90vw] object-contain opacity-100 transition-opacity duration-100 ease-in-out;
 }
 
 .gallery-placeholder-loaded {
