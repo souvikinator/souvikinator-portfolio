@@ -132,9 +132,6 @@ const fullSizeImages = await getFullSizeImages(images, id)
     const closeButton = document.getElementById(
       'close-button',
     ) as HTMLButtonElement
-    const placeholderImages = document.querySelectorAll(
-      '.gallery-placeholder',
-    ) as NodeListOf<HTMLImageElement>
 
     let activeImage: HTMLImageElement | null = null
     let currentIndex = -1
