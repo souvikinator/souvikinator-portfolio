@@ -31,6 +31,7 @@ export default defineConfig({
     react(),
     icon(),
   ],
+  trailingSlash: 'never',
   markdown: {
     syntaxHighlight: false,
     rehypePlugins: [
