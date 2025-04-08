@@ -31,7 +31,6 @@ export const NAV_LINKS: Link[] = [
 
 export const SOCIAL_LINKS: Link[] = [
   { href: 'https://github.com/echoghi', label: 'GitHub' },
-  { href: 'https://twitter.com/echoghi', label: 'Twitter' },
   { href: 'echoghi@rennalabs.xyz', label: 'Email' },
   { href: '/rss.xml', label: 'RSS' },
 ]
