@@ -372,5 +372,5 @@
 }
 
 .gallery-image-zoom-loaded {
-  @apply opacity-100;
+  @apply cursor-zoom-out opacity-100;
 }
