@@ -57,10 +57,10 @@ const fullSizeImages = await getFullSizeImages(images, id)
       <!-- Left navigation arrow -->
       <button
         id="prev-button"
-        class="absolute left-5 hidden py-5 text-primary opacity-70 transition-opacity duration-300 hover:opacity-100 xl:block"
+        class="absolute left-5 hidden p-1.5 text-primary opacity-70 transition-all duration-300 hover:bg-secondary/50 hover:opacity-100 xl:block"
         aria-label="Previous image"
       >
-        <Icon name="lucide:chevron-left" class="size-10" />
+        <Icon name="lucide:chevron-left" class="size-7" />
       </button>
 
       <div id="image-stack" class="relative grid">
@@ -98,19 +98,20 @@ const fullSizeImages = await getFullSizeImages(images, id)
       <!-- Right navigation arrow -->
       <button
         id="next-button"
-        class="absolute right-5 hidden py-5 text-primary opacity-70 transition-opacity duration-300 hover:opacity-100 xl:block"
+        class="absolute right-5 hidden p-1.5 text-primary opacity-70 transition-all duration-300 hover:bg-secondary/50 hover:opacity-100 xl:block"
         aria-label="Next image"
       >
-        <Icon name="lucide:chevron-right" class="size-10" />
+        <Icon name="lucide:chevron-right" class="size-7" />
       </button>
 
       <!-- Close button -->
       <button
         id="close-button"
-        class="absolute right-5 top-5 text-primary opacity-70 transition-opacity duration-300 hover:opacity-100"
+        class="absolute right-3 top-3 p-1.5 text-primary opacity-70 transition-all duration-300 hover:bg-secondary/50 hover:opacity-100 sm:right-5 sm:top-5"
         aria-label="Close gallery"
+        title="close"
       >
-        <Icon name="lucide:x" class="size-8" />
+        <Icon name="lucide:x" class="size-6" />
       </button>
     </div>
   </div>
@@ -119,6 +120,7 @@ const fullSizeImages = await getFullSizeImages(images, id)
 <script>
   // Setup the gallery functionality
   function setupGallery() {
+    const isMobile = window.innerWidth < 640
     const galleryImages = document.querySelectorAll(
       '.gallery-item',
     ) as NodeListOf<HTMLImageElement>
@@ -148,11 +150,15 @@ const fullSizeImages = await getFullSizeImages(images, id)
         clearTimeout(inactivityTimer)
       }
 
-      // Start a new timer to hide buttons after 2 seconds
-      inactivityTimer = window.setTimeout(hideButtons, 2000)
+      // Only apply the inactivity timer on non-mobile screens (640px and up)
+      if (!isMobile) {
+        // Start a new timer to hide buttons after 2 seconds
+        inactivityTimer = window.setTimeout(hideButtons, 2000)
+      }
     }
 
     function hideButtons() {
+      if (isMobile) return
       prevButton.style.opacity = '0'
       nextButton.style.opacity = '0'
       closeButton.style.opacity = '0'

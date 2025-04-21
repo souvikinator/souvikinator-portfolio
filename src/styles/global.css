@@ -360,7 +360,7 @@
 }
 
 .gallery-placeholder {
-  @apply relative z-[1] h-full max-h-[90vh] w-full max-w-[90vw] object-contain opacity-100 transition-opacity duration-100 ease-in-out;
+  @apply relative z-[1] h-full max-h-[90vh] w-full object-contain opacity-100 transition-opacity duration-100 ease-in-out sm:max-w-[90vw];
 }
 
 .gallery-placeholder-loaded {
@@ -368,7 +368,7 @@
 }
 
 .gallery-image-zoom {
-  @apply relative z-[2] mx-auto aspect-auto h-auto max-h-[90vh] w-auto max-w-[90vw] object-contain opacity-0 transition-opacity duration-100 ease-in-out;
+  @apply relative z-[2] mx-auto aspect-auto h-auto max-h-[90vh] w-auto object-contain opacity-0 transition-opacity duration-100 ease-in-out sm:max-w-[90vw];
 }
 
 .gallery-image-zoom-loaded {
