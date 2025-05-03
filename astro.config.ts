@@ -21,7 +21,7 @@ import icon from 'astro-icon'
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://emile.sh',
+  site: 'https://souvikinator.xyz',
   integrations: [
     tailwind({
       applyBaseStyles: false,
@@ -44,7 +44,6 @@ export default defineConfig({
       ],
       rehypeHeadingIds,
       rehypeKatex,
-      // @ts-expect-error
       sectionize,
       [
         rehypePrettyCode,
