@@ -13,24 +13,23 @@ export type Link = {
 }
 
 export const SITE: Site = {
-  TITLE: 'Emile Choghi',
+  TITLE: 'Souvik Kar Mahapatra',
   DESCRIPTION:
-    'Emile Choghi is a software engineer who specializes in building useful digital experiences.',
-  EMAIL: 'echoghi@rennalabs.xyz',
-  NUM_POSTS_ON_HOMEPAGE: 3,
-  POSTS_PER_PAGE: 3,
-  SITEURL: 'https://emile.sh',
+    'Souvik Kar Mahapatra is a builder who creates tools focused on automating boring tasks and solving real-world problems, and shares what he learns.',
+  EMAIL: 'souvikat001@gmail.com',
+  NUM_POSTS_ON_HOMEPAGE: 5,
+  POSTS_PER_PAGE: 5,
+  SITEURL: 'https://souvikinator.xyz',
 }
 
 export const NAV_LINKS: Link[] = [
   { href: '/', label: 'home' },
   { href: '/blog', label: 'blog' },
   { href: '/work', label: 'work' },
-  { href: '/photos', label: 'photos' },
 ]
 
 export const SOCIAL_LINKS: Link[] = [
-  { href: 'https://github.com/echoghi', label: 'GitHub' },
-  { href: 'echoghi@rennalabs.xyz', label: 'Email' },
+  { href: 'https://github.com/souvikinator', label: 'GitHub' },
+  { href: 'mailto:souvikat001@gmail.com', label: 'Email' },
   { href: '/rss.xml', label: 'RSS' },
 ]
