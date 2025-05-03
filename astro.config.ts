@@ -44,6 +44,7 @@ export default defineConfig({
       ],
       rehypeHeadingIds,
       rehypeKatex,
+      // @ts-ignore
       sectionize,
       [
         rehypePrettyCode,
