@@ -80,3 +80,4 @@ We are not done yet!! We have 3 more levels of Google XSS challenges to complete
 🥳 So it's time to wrap up the post with a quote
 
 > "For the things we have to learn before we can do them, we learn by doing them." ― Aristotle
+ 

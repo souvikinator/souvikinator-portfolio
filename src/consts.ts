@@ -30,6 +30,8 @@ export const NAV_LINKS: Link[] = [
 
 export const SOCIAL_LINKS: Link[] = [
   { href: 'https://github.com/souvikinator', label: 'GitHub' },
+  { href: 'https://x.com/souvikinator', label: 'Twitter' },
+  { href: 'https://linkedin.com/in/souvik-kar-mahapatra', label: 'LinkedIn' },
   { href: 'mailto:souvikat001@gmail.com', label: 'Email' },
   { href: '/rss.xml', label: 'RSS' },
 ]
