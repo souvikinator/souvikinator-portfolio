@@ -76,7 +76,9 @@ Just like this bouncer, a neuron:
 - Only "fires" (starts the party) when the total hits the threshold
 - Stays quiet (no party) when it doesn't
 
-Well guys that's what McCulloch Pitts Neuron (MCP) Neuron is really
+![mcp meme](./mcp-meme.png)
+
+Well that's what McCulloch Pitts Neuron (MCP) Neuron does. It's a super simplified binary version of a real neuron. Read more about the [limitations and differences](#limitations-and-differences) below.
 
 ## McCulloch Pitts Neuron (MCP)
 
