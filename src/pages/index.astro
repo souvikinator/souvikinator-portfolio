@@ -35,7 +35,7 @@ const blog = (await getCollection('blog'))
             Currently exploring AI/ML hands-on and working on a bunch of
             <a href="/work" class="underline">side projects</a>.
           </p>
-          <blockquote
+          <!-- <blockquote
             class="border-l-4 border-border pl-4 italic text-muted-foreground"
           >
             <p class="text-sm text-primary">what does souvikinator mean?</p>
@@ -49,9 +49,8 @@ const blog = (await getCollection('blog'))
               Plus, coworkers often called me a 'machine', so it felt fitting
               and playful.
             </p>
-          </blockquote>
+          </blockquote> -->
           <div class="flex flex-col gap-x-2 gap-y-2 pt-2">
-            <p class="text-sm text-muted-foreground">Connect with me:</p>
             <SocialIcons
               links={SOCIAL_LINKS.filter((link) =>
                 ['GitHub', 'Twitter', 'LinkedIn', 'Email'].includes(link.label)
