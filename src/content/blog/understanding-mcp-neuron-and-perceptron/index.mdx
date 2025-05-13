@@ -269,6 +269,10 @@ The threshold can change based on chemicals in the brain, fatigue, or recent act
 
 So, in the brain, the threshold is a dynamic property, influenced by genetics, experience, and the neuron's current state.
 
+### Linear Separability
+
+Now to give you a perspective, we can put this 
+
 ### Limitations
 
 Even though the MCP neuron was a breakthrough, it comes with some important limitations:
@@ -280,10 +284,77 @@ This made [Frank Rosenblatt](https://en.wikipedia.org/wiki/Frank_Rosenblatt) thi
 
 ## Perceptron
 
-The basic structure is just like the MCP neuron, but here's the big difference: **the weights can now be adjusted through learning!**
+The basic structure is just like the MCP neuron, but here's the big difference: **the weights and threshold can be adjusted through learning!**
 
-<Callout variant="explanation" title="What do we mean by learning?">
-  **Learning through trial and error**:
+### Deriving Perceptron from MCP Neuron (mathematically)
+
+It'll get a bit mathy here, but I promise it'll be worth it.
+
+So we want our neuron to fulfill following conditions:
+
+1. Adjust threshold based on learning (unlike MCP neuron, where threshold and weights are fixed)
+2. Adjust weights based on learning
+
+Let's break this down step by step.
+
+#### Step 1: Starting with the MCP Neuron
+
+<Callout variant="proof" title="The Basic MCP Model">
+First, let's recall how the MCP neuron works. It has two main components:
+
+1. **Weighted Sum**:
+$$
+u = \sum_{i=1}^{n} w_i x_i
+$$
+
+2. **Activation Function**:
+$$
+y = \begin{cases} 
+  1 & \text{if } u \geq \theta \\
+  0 & \text{if } u < \theta
+\end{cases}
+$$
+
+This model works, but the threshold $\theta$ is fixed. We need to make it learnable.
+</Callout>
+
+#### Step 2: Making the Threshold Learnable
+
+<Callout variant="proof" title="Transforming the Threshold">
+Let's transform the fixed threshold into something we can learn:
+
+1. First, write out the activation condition:
+$$
+\sum_{i=1}^{n} w_i x_i \geq \theta
+$$
+
+2. Rearrange by subtracting $\theta$ from both sides:
+$$
+\sum_{i=1}^{n} w_i x_i - \theta \geq 0
+$$
+
+3. Here's the key insight: Let's define $b = -\theta$ and call it the **bias**:
+$$
+\sum_{i=1}^{n} w_i x_i + b \geq 0
+$$
+
+This can also be written as:
+$$
+x_0 b + \sum_{i=1}^{n} w_i x_i \geq 0
+$$
+
+where $x_0 = 1$ is a constant input representing the bias. So we are treating it a combination of weight and input.
+
+</Callout>
+
+Now instead of a fixed threshold $\theta$, we have a bias term $b$ as weight that can can be updated based on learning. This is how the perceptron model looks like so far:
+
+![perceptron from mcp neuron](./mcp-to-perceptron-1.png)
+
+
+#### Step 3: Learning Rule
+
+  By learning we mean, learning by trial and error:
 
   1. The perceptron makes a prediction based on its current weights
   2. It compares its prediction with the correct answer
@@ -294,14 +365,14 @@ The basic structure is just like the MCP neuron, but here's the big difference: 
   - For 5+5 if perceptron predicts 9 and correct answer is 10, it will calculate the error and adjust weights to improve next time until it gets the answer right.
 
   This iterative process of prediction → error calculation → weight adjustment is what we mean by "learning" and this is what training a perceptron means. It gradually discovers the optimal weights through experience, rather than having them pre-programmed.
-</Callout>
 
-Here's the simple but powerful learning rule:
+<Callout variant="definition" title="The Learning Algorithm">
+Now that even bias is a weight, we only need to adjust the weights based on learning.
 
-<Callout variant="notation" title="Perceptron Learning Rule">
-  
+We'll use the **perceptron learning rule**:
+
 $$
-  wᵢ ← wᵢ + \underbrace{\eta}_{\text{learning rate}} \times \underbrace{(y – y')}_{\substack{\text{how wrong}\\\text{we were}}} \times \underbrace{xᵢ}_{\substack{\text{did input}\\\text{participate?}}}
+wᵢ ← wᵢ + \underbrace{\eta}_{\text{learning rate}} \times \underbrace{(y – y')}_{\substack{\text{how wrong}\\\text{we were}}} \times \underbrace{xᵢ}_{\substack{\text{did input}\\\text{participate?}}}
 $$
 
   <Callout variant="explanation" title="What does this mean?">
@@ -317,8 +388,7 @@ $$
   </Callout>
 </Callout>
 
-
-### **What's Learning Rate ($\eta$)?**
+#### **What's Learning Rate ($\eta$)?**
 
 Think of it like a tap that controls how fast we adjust the weights:
   
@@ -335,7 +405,7 @@ For most simple perceptron tasks, a learning rate between 0.1 and 0.01 works wel
 | 0.01 | Low | Stable but slow learning |
 
 
-### **Why multiply by input ($x_i$)?**
+#### **Why multiply by input ($x_i$)?**
 
 This ensures we only adjust weights that actually contributed to the mistake:
   
@@ -344,17 +414,46 @@ This ensures we only adjust weights that actually contributed to the mistake:
   - If input was 0: That input didn't contribute to the mistake, so $0 \times anything = 0$ (no adjustment)
   - If input was 1: That input did contribute, so we adjust its weight based on how wrong we were
 
+Idk why I'm obsessed with dams, but it's a fun way to think about it.
+
+<Callout variant="note">
+If you notice, since bias has a constant input of $1$, it's weight ($bias$) is updated everytime since it's input is always contributing to the mistake.
+</Callout>
+
+Now let's see how the perceptron model looks like now:
+
+![perceptron from mcp neuron](./mcp-to-perceptron-2.png)
+
 ### Perceptron convergence theorem
 
+In simple terms, the perceptron convergence theorem states that the perceptron will find a set of weights to solve any linearly separable classification problem. Proving this is a bit out of scope of this post, but you can read more about it in this [medium post](https://medium.com/@adnanemajdoub/perceptron-convergence-theorem-c5b44cc06a08).
+
 ### Implementing Perceptron
+
+Let's implement the perceptron model in code.
+
+```python
+class Perceptron:
+    def __init__(self, learning_rate=0.01):
+        self.learning_rate = learning_rate
+        self.n_iterations = n_iterations
+        self.weights = None
+        self.bias = None
+
+        
+```
 
 ### Activity: Making perceptron learn addition
 
 Let's make perceptron learn addition of two numbers.
 
-### Perceptron as a Linear Classifier
-
-### How do neurons learn?
 
 ### Limitations
+
+
+## Conclusion
+
+This was a long ass post so I conclude this here. I hope you enjoyed reading this as much as I enjoyed writing it. If you find any mistakes, please let me know.
+
+Thanks for reading :)
 
