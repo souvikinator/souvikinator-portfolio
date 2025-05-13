@@ -10,14 +10,12 @@ image: './cover.png'
 import Callout from '@/components/Callout.astro'
 
 > [!NOTE]
-> Once upon a time,
-> **Neuroscientists**: "It’s all about synapses and neurotransmitters.”<br />
->
-> **Engineers**: “Cool story. Let's make it run on Python?”
+> **Neuroscientists:** "It’s all about synapses and neurotransmitters.”<br />
+> **Engineers:** “Fascinating! Can we turn that into code?”
 
-and here we are running LLMs...
+Fast forward to today, it's everywhere in our lives.
 
-I started reading this book "How Machines Learn", and was really fascinated and found myself deep into the rabbit hole. This blog post will explore how these first artificial neuron MCP followed by perceptron were modeled around the actual neuron. The math it uses is also pretty basic but amazing.
+Recently, I picked up the book "How Machines Learn" and found myself captivated by how the earliest artificial neurons like the MCP neuron and the perceptron were designed to mimic real biological neurons (to a certain extent). In this post, I’ll break down how these foundational models work, how closely they mirror the brain, and we'll implement it.
 
 ## The Real Deal: Biological Neurons
 
@@ -113,13 +111,46 @@ $y$ being the output of the activation function and $u$ being input (total signa
 {\displaystyle y={\begin{cases}1&{\text{if }}u\geq \theta \\0&{\text{if }}u<\theta \end{cases}}}
 ```
 
-and if get anxious see such mathy fonts here is flow diagram:
+<Callout title="Intuition" variant="intuition">
+  <p>
+    If you get anxious seeing such mathy fonts, here's a flow diagram to help build intuition:
+  </p>
 
-![step function flow diagram](./step-function-diagram.png)
+  ![step function flow diagram](./step-function-diagram.png)
+
+</Callout>
 
 This is also used in [perceptron](#perceptron) as we'll discuss further. But the question is what can we do with it?
 
-### Logic Gates using MCP
+### Implementing MCP Neuron
+
+Let's implement it in code. We'll use Python to create a simple implementation of the MCP neuron.
+
+
+<Callout title="Python Implementation: MCP Neuron" variant="example">
+  <p>
+    This class takes a list of weights and a threshold, computes the weighted sum of the inputs, and applies a step activation function:
+  </p>
+  ```python
+  class MCPNeuron:
+      def __init__(self, weights, theta):
+          self.weights = weights
+          self.theta = theta
+
+      def weighted_sum(self, inputs):
+          return sum(i * w for i, w in zip(inputs, self.weights))
+
+      def step_function(self, u):
+          return int(u >= self.theta)  # returns 1 if threshold met, else 0
+
+      def activate(self, inputs):
+          u = self.weighted_sum(inputs)
+          return self.step_function(u)
+  ```
+</Callout>
+
+
+### Implementing Logic Gates using MCP
 
 Why are we suddenly talking about logic gates? Well, it turns out MCP neurons can do something pretty neat: they can simulate basic logical operations. This was one of the first practical applications that got researchers excited.
 
@@ -144,6 +175,20 @@ To make an MCP neuron behave like an AND gate:
 
 ![and gate using MCP neuron](./mcp-and.png)
 
+<Callout variant="example" title="Implementing AND Gate">
+  <p>
+    Here's how we can implement the AND gate using our MCP neuron:
+  </p>
+  ```python
+weights = [1,1]
+threshold = 2
+andGate = MCPNeuron(weights,threshold)
+
+inputs = [1,1] # try out other inputs
+print(andGate.activate(inputs))
+  ```
+</Callout>
+
 #### The OR Gate
 
 The OR operation outputs true if ANY input is true:
@@ -163,7 +208,21 @@ To create an OR gate:
 
 ![OR gate using MCP neuron](./mcp-or.png)
 
-#### How would you implement NOT gate? (Inhibitor signal)
+<Callout variant="example" title="Implementing AND Gate">
+  <p>
+    Here's how we can implement the OR gate using our MCP neuron:
+  </p>
+  ```python
+weights = [1,1]
+threshold = 1
+orGate = MCPNeuron(weights,threshold)
+
+inputs = [1,1] # try out other inputs
+print(orGate.activate(inputs))
+  ```
+</Callout>
+
+#### NOT gate (Inhibitor signal)
 
 The NOT gate is particularly interesting because it mirrors how inhibitory signals work in biological neurons. Remember how our bouncer dealt with party-poopers? This is similar!
 
@@ -181,19 +240,28 @@ To create a NOT gate using an MCP neuron:
 
 ![NOT gate using MCP neuron](./mcp-not.png)
 
+<Callout variant="example" title="Implementing NOT Gate">
+  <p>
+    Here's how we can implement the NOT gate using our MCP neuron:
+  </p>
+  ```python
+  weights = [-1]
+  threshold = 0
+  notGate = MCPNeuron(weights,threshold)
+
+  inputs = [1] # try out other inputs
+  print(notGate.activate(inputs))
+  ```
+</Callout>
+
 <Callout variant="exercise" title="Try it yourself!">
 - Try designing other logic gates (like <b>NAND</b>, <b>NOR</b>, <b>XOR</b>) using the MCP neuron model.
 - Can you find a gate that <b>cannot</b> be implemented with a single MCP neuron? (Hint: **XOR**)
 - Think about <b>why</b> some gates work and others don't, what's special about their logic?
-
+- Try chaining multiple MCP neurons to create more complex logic.
 </Callout>
 
 ### Threshold for biological neurons
-
-<Callout variant="problem" title="Who decides the threshold?">
-  Who sets the threshold in a neuron, and how does this work in biological
-  neurons?
-</Callout>
 
 In biological neurons, the "threshold" is called **Action Potential** and it's determined by the neuron's properties and the environment.
 
@@ -215,33 +283,78 @@ This made [Frank Rosenblatt](https://en.wikipedia.org/wiki/Frank_Rosenblatt) thi
 The basic structure is just like the MCP neuron, but here's the big difference: **the weights can now be adjusted through learning!**
 
 <Callout variant="explanation" title="What do we mean by learning?">
-  **learning by error**: The perceptron tries to improve by looking at its
-  mistakes. If it gets an answer wrong, it tweaks its weights a little to do
-  better next time. Perceptron needs to be trained with lots of examples so it
-  can adjust itself and make more accurate predictions.
+  **Learning through trial and error**:
+
+  1. The perceptron makes a prediction based on its current weights
+  2. It compares its prediction with the correct answer
+  3. If there's an error, it adjusts its weights slightly in the direction that would reduce the error
+  4. This process repeats with many examples until the perceptron achieves good accuracy
+
+  Example:
+  - For 5+5 if perceptron predicts 9 and correct answer is 10, it will calculate the error and adjust weights to improve next time until it gets the answer right.
+
+  This iterative process of prediction → error calculation → weight adjustment is what we mean by "learning" and this is what training a perceptron means. It gradually discovers the optimal weights through experience, rather than having them pre-programmed.
 </Callout>
 
 Here's the simple but powerful learning rule:
 
-<Callout variant="notation">
-  $new\_weight = old\_weight + learning\_rate × (correct\_answer - prediction) ×
-  input$
+<Callout variant="notation" title="Perceptron Learning Rule">
+  
+$$
+  wᵢ ← wᵢ + \underbrace{\eta}_{\text{learning rate}} \times \underbrace{(y – y')}_{\substack{\text{how wrong}\\\text{we were}}} \times \underbrace{xᵢ}_{\substack{\text{did input}\\\text{participate?}}}
+$$
+
+  <Callout variant="explanation" title="What does this mean?">
+    In simple terms:
+  
+  $new\_weight = \underbrace{old\_weight}_{w_i} + \underbrace{learning\_rate}_{\eta} \times \underbrace{(correct\_answer - prediction)}_{(y - y')} \times \underbrace{input}_{x_i}$
+  
+  - $wᵢ$ is the weight of the $i$th input
+  - $\eta$ is the learning rate
+  - $y$ is the predicted output
+  - $y'$ is the correct output
+  - $xᵢ$ is the $i$th input
+  </Callout>
 </Callout>
 
-### Learning AND Gate
 
-Instead of hardcoding weights like in MCP neuron, perceptron can learn the AND gate:
+### **What's Learning Rate ($\eta$)?**
 
-1. Start with random weights (maybe w1 = 0.3, w2 = 0.4)
-2. Show it examples:
-   ```
-   Input: [1,1] → Should output: 1
-   Input: [1,0] → Should output: 0
-   Input: [0,1] → Should output: 0
-   Input: [0,0] → Should output: 0
-   ```
-3. For each wrong prediction, adjust weights
-4. Eventually, it finds weights that work (around w1 = 1, w2 = 1)
+Think of it like a tap that controls how fast we adjust the weights:
+  
+- If learning rate is too high (tap fully open): We make big adjustments and might overshoot the correct weights, like flooding a sink or destroying a settlement if it's a dam 💀
+- If learning rate is too low (tap barely open): Learning happens very slowly, like filling a swimming pool drop by drop
+- Just right (tap opened moderately): We learn steadily without overshooting
 
-This ability to learn from examples was revolutionary! It meant we could train neural networks instead of having to figure out the exact weights ourselves.
+For most simple perceptron tasks, a learning rate between 0.1 and 0.01 works well. This gives us enough movement to learn while maintaining stability.
+
+| Learning Rate | Description | Training Behavior |
+|--------------|-------------|-------------------|
+| 1.0 | High | Quick learning but might overshoot |
+| 0.1 | Moderate | Good balance of speed and stability |
+| 0.01 | Low | Stable but slow learning |
+
+
+### **Why multiply by input ($x_i$)?**
+
+This ensures we only adjust weights that actually contributed to the mistake:
+  
+  Imagine you're building a dam and notice water leaking. You only want to reinforce the parts where water is actually flowing (input = 1), not the dry parts (input = 0).
+  
+  - If input was 0: That input didn't contribute to the mistake, so $0 \times anything = 0$ (no adjustment)
+  - If input was 1: That input did contribute, so we adjust its weight based on how wrong we were
+
+### Perceptron convergence theorem
+
+### Implementing Perceptron
+
+### Activity: Making perceptron learn addition
+
+Let's make perceptron learn addition of two numbers.
+
+### Perceptron as a Linear Classifier
+
+### How do neurons learn?
+
+### Limitations
 
