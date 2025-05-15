@@ -27,11 +27,11 @@ We all know Neurons are cells found in Nervous system and it's main job is to tr
 
 ### How do neurons work?
 
-1. **Dendrites**: these are like thoundands of tiny antennas, each receive signals from other neurons
+1. **Dendrites**: these are like thousands of tiny antennas, each receive signals from other neurons
 
 2. **Signals**: these are electrochemical signals and one thing to note is each signal has it's importance meaning one signal can be less important than other. Signals can be excitatory (encouraging the neuron to fire) or inhibitory (discouraging it)
 
-3. **Cell body/Soma**: All the incoming signals gather up at the body and it decides whether to fire the signal or not. If the combines importance of the excitatory signal minus the inhibitroy signal exceeds this threshold -> Boom the neuron fires.
+3. **Cell body/Soma**: All the incoming signals gather up at the body and it decides whether to fire the signal or not. If the combines importance of the excitatory signal minus the inhibitory signal exceeds this threshold -> Boom the neuron fires.
 
 4. **Axon & Terminals**: This is like a dedicated output cable, carrying the decision. Axon terminals are like broadcast stations, sending the signal to dendrites of other neurons
 
@@ -59,7 +59,7 @@ When just one regular person shows up (value = 1), and the threshold is > 1, no 
 
 Now this is where our bouncer's math gets spicy (just like real-world drama):
 
-**Scene 1**: Two regular college buddies show up $(1 + 1)$, but wait... who's that rolling up in a Mercedes? Oh snap, it's the minister's son and his influencial friend $(VIP = 2)$! Total party value hits $6$ and Party mode: ACTIVATED! 🎉
+**Scene 1**: Two regular college buddies show up $(1 + 1)$, but wait... who's that rolling up in a Mercedes? Oh snap, it's the minister's son and his influential friend $(VIP = 2)$! Total party value hits $6$ and Party mode: ACTIVATED! 🎉
 
 **Scene 2**: A police officer $(-2)$ shows up after getting noise complaints. But lucky for us, we've got our the minister's son and his equally influential friend $(2 + 2)$.
 Even with Officer Party-Pooper, the vibe stays alive because $4 > threshold$.
@@ -109,7 +109,7 @@ Here is how it works:
 
 Because back then due to limited understanding of neurons, scientists were under the assumption that neurons had two state: **Fires** or **Doesn't fire**.
 
-Now we know that Neurons produces spectrum of outputs and there are a lot more elements involved into it and we have more advanced models to memic that.
+Now we know that Neurons produces spectrum of outputs and there are a lot more elements involved into it and we have more advanced models to mimic that.
 </Callout>
 
 ### Activation function
@@ -319,7 +319,7 @@ This is the equation of a line! say $t$ as $x$ axis and $h$ as $y$ axis, this is
 <Callout variant="explanation">
 **What does this line signify?**
 
-It's the **decision boundary** or simply put the minimium requirement for neuron to fire/activate. So as per the graph any point on the line i.e $t + h = 2$ will be classified as 1 (go outside) and any point below the line i.e $t + h < 2$ will be classified as 0 (stay in).
+It's the **decision boundary** or simply put the minimum requirement for neuron to fire/activate. So as per the graph any point on the line i.e $t + h = 2$ will be classified as 1 (go outside) and any point below the line i.e $t + h < 2$ will be classified as 0 (stay in).
 </Callout>
 
 but wait we have an inequality to handle:
@@ -344,7 +344,7 @@ Here is a visual of how weights influence the line:
 
 <Video src={weightChangeVideo} />
 
-Alright maybe I played too much there 💀 but you get the point. Go ahead playround with the weights and see how it changes the line: [MCP Neuron plot](https://www.desmos.com/calculator/gcuaqgxule)
+Alright maybe I played too much there 💀 but you get the point. Go ahead play around with the weights and see how it changes the line: [MCP Neuron plot](https://www.desmos.com/calculator/gcuaqgxule)
 
 ### Limitations
 
@@ -513,7 +513,7 @@ This ensures we only adjust weights that actually contributed to the mistake:
 Idk why I'm obsessed with dams, but it's a good way to think about it.
 
 <Callout variant="note">
-If you notice, since bias has a constant input of $1$, it's weight ($bias$) is updated everytime since it's input is always contributing to the output.
+If you notice, since bias has a constant input of $1$, it's weight ($bias$) is updated every time since it's input is always contributing to the output.
 </Callout>
 
 Now let's see what the perceptron model looks like now:
@@ -563,9 +563,9 @@ While this idea makes sense in theory, there are several practical reasons why w
 
 1. **Computational Efficiency**: Running the model until convergence would be very slow, especially for large datasets. If convergence is slow or if noise in the data prevents the loss from fully stabilizing. By setting a number of epochs, we impose a manageable boundary on resource use. Also allow us to stop early if the model is performing well.
 
-2. **Preventing Overfitting**: If a model runs for too long, it risks overfitting, where it learns not just the general patterns in the training data but also its noise and quirks. This reduces its ability to perform well on new, unseen data. Limiting the number of epochs helps stop training before overfitting becomes a problem.
+2. **Preventing Over-fitting**: If a model runs for too long, it risks over-fitting, where it learns not just the general patterns in the training data but also its noise and quirks. This reduces its ability to perform well on new, unseen data. Limiting the number of epochs helps stop training before over-fitting becomes a problem.
 
-3. **Monitoring and Validation**: Epochs give us regular checkpoints to assess the model's performance. After each epoch, we can evaluate the model on a separate validation set. This allows us to stop early, halting training if the validation loss starts to rise (a sign of overfitting).
+3. **Monitoring and Validation**: Epochs give us regular checkpoints to assess the model's performance. After each epoch, we can evaluate the model on a separate validation set. This allows us to stop early, halting training if the validation loss starts to rise (a sign of over-fitting).
 
 The number of epochs is a tunable. By experimenting with different values, we can determine the optimal number of passes through the data that maximizes performance on a validation set.
 
@@ -787,7 +787,7 @@ This was a long ass post so I conclude this here. I hope you enjoyed reading thi
 
 Thanks for reading :)
 
-Also here is an intersting problem to chew on:
+Also here is an interesting problem to chew on:
 
 ![neuron-meme-2](./neuron-meme-2.png)
 
