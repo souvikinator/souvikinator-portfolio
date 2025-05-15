@@ -510,13 +510,13 @@ This ensures we only adjust weights that actually contributed to the mistake:
   - If input was 0: That input didn't contribute to the mistake, so $0 \times anything = 0$ (no adjustment)
   - If input was 1: That input did contribute, so we adjust its weight based on how wrong we were
 
-Idk why I'm obsessed with dams, but it's a good way to think about it.
+I don't know why I'm obsessed with dams, but it's a good way to think about it.
 
 <Callout variant="note">
 If you notice, since bias has a constant input of $1$, it's weight ($bias$) is updated every time since it's input is always contributing to the output.
 </Callout>
 
-Now let's see what the perceptron model looks like now:
+Let's see what the perceptron model looks like:
 
 ![perceptron from mcp neuron](./mcp-to-perceptron-2.png)
 
@@ -526,10 +526,16 @@ Training a perceptron is a bit like practicing a new skill: you rarely get every
 
 <Callout variant="definition" title="Iteration">
 This process of looking at one example and possibly updating the weights is called an **iteration**.
+
+**Example:** It's like going through one math problem with the student
 </Callout>
 
 <Callout variant="definition" title="Epoch">
 When the perceptron has seen every example in the training set once, that's called an **epoch**.
+
+**Example:**
+- 1 epoch is like completing an entire homework sheet (consists of multiple problems)
+- Multiple epochs are like completing same homework sheet multiple times.
 </Callout>
 
 **But why do we need multiple **epoch** / passes through the data?**
@@ -541,15 +547,14 @@ By going through the data multiple times, the perceptron can slowly and steadily
 <Callout variant="definition" title="Convergence">
 **Convergence** happens when the perceptron can go through the entire training set during an epoch without making any mistakes given that the data is [linearly separable](#linear-separability). At this point, it has found a set of weights that correctly classifies all the training data.
 
+**Example:** If the student can solve all the problems in the homework sheet correctly without help, we say the perceptron has converged.
+
 Proving this is a bit out of scope of this post, but you can read more about it in this [medium post](https://medium.com/@adnanemajdoub/perceptron-convergence-theorem-c5b44cc06a08).
 </Callout>
 
-In summary:
-- An **iteration** is one update after seeing a single example.
-- An **epoch** is one full pass through all the training data.
-- **Convergence** is when the perceptron stops making mistakes on the training set.
+So we keep doing homework sheets (epochs) until the student(perceptron) masters the material (convergence)!
 
-#### Why need epochs if model will converge at some point?
+#### Why do we use epochs if model will converge at some point?
 
 You might think:
 
@@ -783,7 +788,7 @@ Try the exercises above and experiment with the perceptron to see these limitati
 
 ## Conclusion
 
-This was a long ass post so I conclude this here. I hope you enjoyed reading this as much as I enjoyed writing it and feel free to ask question in the comment below. If you find any mistakes, please let me know.
+This was a long ass post so I conclude this here. I hope you enjoyed reading this as much as I enjoyed writing it. If you find any mistakes, please let me know.
 
 Thanks for reading :)
 
