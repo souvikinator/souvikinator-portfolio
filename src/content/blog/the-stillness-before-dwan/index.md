@@ -1,6 +1,6 @@
 ---
 title: 'The Stillness Before Dawn'
-date: 2025-04-06T05:30:47+05:30
+date: 2024-11-10T05:30:47+05:30
 draft: false
 tags: ['thoughts']
 description: 'Reflecting on the quiet moments before dawn and the clarity they bring.'
