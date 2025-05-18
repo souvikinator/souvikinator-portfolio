@@ -1,8 +1,6 @@
-![Showcase Card](/public/static/twitter-card.png)
+## souvikinator.xyz
 
-## emile.sh
-
-My personal corner of the web.
+My personal corner for projects, thoughts, learnings
 
 ## License
 
