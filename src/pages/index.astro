@@ -8,6 +8,7 @@ import { buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { SITE, SOCIAL_LINKS } from '@/consts'
 import Layout from '@/layouts/Layout.astro'
+import { ExternalLinkIcon } from '@radix-ui/react-icons'
 import { getCollection } from 'astro:content'
 
 const blog = (await getCollection('blog'))
@@ -32,31 +33,31 @@ const minLatestProjects = projects.slice(0, 2)
         </CardHeader>
         <CardContent className="space-y-3">
           <p class="text-sm text-primary">
-            I'm a software engineer, product builder, open-source maintainer,
-            lifelong learner. I'm very hands-on and love experimenting, and
-            bringing ideas to life through focused, self-driven work.
+            I'm a software engineer, product builder, open-source maintainer.
+            I'm very hands-on and love experimenting, and bringing ideas to life
+            through focused, self-driven work.
           </p>
 
           <p class="text-sm text-primary">
-            Currently exploring AI/ML hands-on and working on a bunch of
+            Currently delivering quality products to clients, exploring AI/ML
+            hands-on and working on a bunch of
             <a href="/work" class="underline">side projects</a>.
           </p>
-          <!-- <blockquote
-            class="border-l-4 border-border pl-4 italic text-muted-foreground"
-          >
-            <p class="text-sm text-primary">what does souvikinator mean?</p>
-            <p class="text-sm text-primary">
-              <strong>Souvikinator</strong> is a play on my name, Souvik. The 'Inator'
-              is inspired by Dr. Doofenshmirtz from <a
-                href="https://en.wikipedia.org/wiki/Phineas_and_Ferb"
-                class="underline">Phineas and Ferb</a
-              >, who added 'inator' to his inventions. It implies that what
-              Souvik builds is functional and useful, like a machine or tool.
-              Plus, coworkers often called me a 'machine', so it felt fitting
-              and playful.
-            </p>
-          </blockquote> -->
-          <div class="flex flex-col gap-x-2 gap-y-2 pt-2">
+          <p class="text-sm text-primary">
+            I'm <u>open to work</u> / <u>freelancing gigs</u> so feel free to book
+            a call.
+          </p>
+          <div class="flex flex-row gap-x-2 gap-y-2 pt-2">
+            <a
+              href="https://calendly.com/souvikinator"
+              target="_blank"
+              rel="noopener noreferrer"
+              class={buttonVariants({ variant: 'default' }) +
+                ' inline-block space-x-2'}
+            >
+              <span>Book a call</span>
+              <ExternalLinkIcon />
+            </a>
             <SocialIcons
               links={SOCIAL_LINKS.filter((link) =>
                 ['GitHub', 'Twitter', 'LinkedIn', 'Email'].includes(link.label)
