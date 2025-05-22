@@ -2,6 +2,7 @@
 import BlogCard from '@/components/BlogCard.astro'
 import Container from '@/components/Container.astro'
 import Link from '@/components/Link.astro'
+import ProjectCard from '@/components/ProjectCard.astro'
 import SocialIcons from '@/components/SocialIcons.astro'
 import { buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
@@ -13,6 +14,11 @@ const blog = (await getCollection('blog'))
   .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE)
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order
+)
+const minLatestProjects = projects.slice(0, 2)
 ---
 
 <Layout title="Home" description={SITE.DESCRIPTION}>
@@ -59,6 +65,35 @@ const blog = (await getCollection('blog'))
           </div>
         </CardContent>
       </Card>
+    </section>
+    <section class="flex flex-col gap-y-4">
+      <h2 class="text-2xl font-bold">Latest project</h2>
+      {
+        minLatestProjects && minLatestProjects.length > 0 ? (
+          <ul class="not-prose flex flex-col gap-y-4">
+            {minLatestProjects.map((project) => (
+              <li>
+                <ProjectCard project={project} />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="text-sm text-primary">
+            No projects available at the moment.
+          </p>
+        )
+      }
+      <div class="flex justify-center">
+        <Link
+          href="/work"
+          class={buttonVariants({ variant: 'ghost' }) + ' group'}
+        >
+          View all projects <span
+            class="ml-1.5 transition-transform group-hover:translate-x-1"
+            >&rarr;</span
+          >
+        </Link>
+      </div>
     </section>
     <section class="flex flex-col gap-y-4">
       <h2 class="text-2xl font-bold">Latest posts</h2>
