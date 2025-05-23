@@ -26,7 +26,7 @@ const authors = await parseAuthors(entry.data.authors ?? [])
 >
   <Link
     href={`/${entry.collection}/${entry.id}`}
-    class="flex flex-col gap-4 sm:flex-row"
+    class="group flex flex-col gap-4 sm:flex-row"
   >
     {
       entry.data.image && (
@@ -36,7 +36,7 @@ const authors = await parseAuthors(entry.data.authors ?? [])
             alt={entry.data.title}
             width={1200}
             height={630}
-            class="rounded-sm object-cover grayscale"
+            class="rounded-sm object-cover grayscale transition-all group-hover:grayscale-0"
           />
         </div>
       )
