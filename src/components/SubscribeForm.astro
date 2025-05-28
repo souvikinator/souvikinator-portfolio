@@ -1,0 +1,73 @@
+---
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Loader2, X } from 'lucide-react'
+
+interface Props {
+  id: string
+  showCancel?: boolean
+}
+
+const { id, showCancel = false } = Astro.props
+---
+
+<Card id={id} className="relative border-border bg-background shadow-lg">
+  <form class="flex flex-col gap-4 p-6">
+    {
+      showCancel && (
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="absolute right-4 top-4"
+          onClick={() => {
+            const dialog = document?.getElementById(
+              'subscribe-modal'
+            ) as HTMLDialogElement | null
+            if (dialog && typeof dialog.close === 'function') dialog.close()
+          }}
+          aria-label="Close"
+        >
+          <X className="h-4 w-4" />
+        </Button>
+      )
+    }
+
+    <h2 class="text-lg font-bold text-foreground">
+      Invest in <span class="text-primary">souvikinator 🚀</span>
+    </h2>
+    <p class="text-sm text-muted-foreground">
+      Get new posts & project updates delivered straight to your inbox. You
+      won't regret it!
+    </p>
+    <div class="relative w-full">
+      <Input
+        type="email"
+        name="email"
+        required
+        placeholder="Your email"
+        className="pr-10"
+      />
+      <svg
+        class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+        width="20"
+        height="20"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        viewBox="0 0 24 24"
+      >
+        <path d="M4 4h16v16H4z" stroke="none"></path>
+        <path
+          d="M22 6.5V17a2.5 2.5 0 01-2.5 2.5h-15A2.5 2.5 0 012 17V6.5M22 6.5A2.5 2.5 0 0019.5 4h-15A2.5 2.5 0 002 6.5m20 0l-10 7-10-7"
+        ></path>
+      </svg>
+    </div>
+    <Button type="submit" className="mt-2 w-full" variant="default">
+      <span class="subscribe-btn-text">Subscribe</span>
+      <Loader2 className="subscribe-btn-loader hidden size-4 animate-spin" />
+    </Button>
+    <p class="error-message hidden text-sm text-red-500"></p>
+  </form>
+</Card>

@@ -19,9 +19,12 @@ import sectionize from '@hbsnow/rehype-sectionize'
 
 import icon from 'astro-icon'
 
+import cloudflare from '@astrojs/cloudflare';
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://souvikinator.xyz',
+
   integrations: [
     tailwind({
       applyBaseStyles: false,
@@ -31,7 +34,9 @@ export default defineConfig({
     react(),
     icon(),
   ],
+
   trailingSlash: 'never',
+
   markdown: {
     syntaxHighlight: false,
     rehypePlugins: [
@@ -66,11 +71,15 @@ export default defineConfig({
     ],
     remarkPlugins: [remarkToc, remarkMath, remarkEmoji],
   },
+
   server: {
     port: 1234,
     host: true,
   },
+
   devToolbar: {
     enabled: false,
   },
+
+  adapter: cloudflare(),
 })
