@@ -10,3 +10,9 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }
+
+type Runtime = import('@astrojs/cloudflare').DirectoryRuntime<ENV>
+
+declare namespace App {
+  interface Locals extends Runtime {}
+}

@@ -3,7 +3,7 @@ import MailerLite from '@mailerlite/mailerlite-nodejs'
 
 export const prerender = false
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
     const { email } = await request.json()
 
@@ -13,8 +13,12 @@ export const POST: APIRoute = async ({ request }) => {
       })
     }
 
-    const API_KEY = import.meta.env.MAILERLITE_API_KEY
-    const GROUP_ID = import.meta.env.MAILERLITE_GROUP_ID
+    // @ts-ignore
+    const API_KEY = locals.runtime.env.MAILERLITE_API_KEY
+    // @ts-ignore
+    const GROUP_ID = locals.runtime.env.MAILERLITE_GROUP_ID
+
+    console.log({ API_KEY, GROUP_ID })
 
     console.log({ API_KEY, GROUP_ID })
 
