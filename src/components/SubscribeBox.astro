@@ -1,7 +1,7 @@
 ---
 // Replace with your actual MailerLite form action URL
 const MAILERLITE_FORM_ACTION = 'https://YOUR_MAILERLITE_FORM_URL'
-import { BellPlus, X } from 'lucide-react'
+import { BellPlus } from 'lucide-react'
 ---
 
 <!-- Floating Subscribe Box (Desktop) -->
@@ -119,60 +119,3 @@ import { BellPlus, X } from 'lucide-react'
     </button>
   </form>
 </dialog>
-
-<div id="newsletter-success" class="fixed bottom-6 right-6 z-40 hidden w-80 min-w-[250px] flex-col gap-2 rounded-lg border border-border bg-background p-4 shadow-lg">
-  <div class="flex items-center justify-between">
-    <span class="text-base font-semibold text-foreground">Thanks for subscribing! 🎉</span>
-    <button 
-      onclick="this.closest('div').classList.add('hidden'); document.cookie = 'newsletter=subscribed; path=/; max-age=31536000;';"
-      class="rounded-full p-1 hover:bg-muted"
-      aria-label="Close"
-    >
-      <X className="h-4 w-4" />
-    </button>
-  </div>
-  <p class="text-sm text-muted-foreground">You'll receive new posts in your inbox.</p>
-</div>
-
-<script>
-  // Handle success message and cookie
-  document.addEventListener('astro:page-load', () => {
-    const forms = document.querySelectorAll('form[action*="mailerlite"]');
-    const subscribeBtn = document.querySelector('button[aria-label="Subscribe"]');
-    const successEl = document.getElementById('newsletter-success');
-    const subscribeBox = document.querySelector('form.fixed.md\\:flex');
-    
-    // Check if already subscribed
-    if (document.cookie.includes('newsletter=subscribed')) {
-      if (subscribeBox) subscribeBox.classList.add('hidden');
-      if (subscribeBtn) subscribeBtn.classList.add('hidden');
-      return;
-    }
-
-    forms.forEach(form => {
-      form.addEventListener('submit', (e) => {
-        // Show success message after short delay
-        setTimeout(() => {
-          if (successEl) {
-            successEl.classList.remove('hidden');
-            // Hide subscribe components
-            if (subscribeBox) subscribeBox.classList.add('hidden');
-            if (subscribeBtn) subscribeBtn.classList.add('hidden');
-          }
-        }, 1000);
-      });
-    });
-  });
-
-  // Handle blog page positioning
-  document.addEventListener('astro:page-load', () => {
-    const blogPage = document.body.classList.contains('blog');
-    const subscribeBox = document.querySelector('form.fixed.md\\:flex');
-    const successEl = document.getElementById('newsletter-success');
-
-    if (blogPage && successEl && !successEl.classList.contains('hidden')) {
-      const offset = successEl.offsetHeight + 24; // 24px for margin
-      document.body.style.paddingBottom = `${offset}px`;
-    }
-  });
-</script>

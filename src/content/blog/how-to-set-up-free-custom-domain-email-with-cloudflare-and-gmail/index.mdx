@@ -1,0 +1,40 @@
+---
+title: 'Free Custom Email with Your Domain via Gmail & Cloudflare'
+date: 2025-05-27T01:30:47+05:30
+draft: false
+tags: ['email', 'cloudflare', 'gmail']
+description: 'This guide provides step-by-step instructions to help you create a professional email address for your domain for free using cloudflare.'
+image: './cover.png'
+---
+
+You can get a free email with your domain and it slaps, (Thanks, Cloudflare + Gmail).
+
+I thought if you wanted an email like `name@jhadoopocha.com`, you had to pay Google or Zoho or some sketchy hosting guy named Rajesh.
+
+While setting up email subscription for this blog (bottom right), found out Cloudflare lets you do it for free. And you can even make those emails land in your regular Gmail inbox. One inbox to rule them all. 🔥
+
+I was literally paying for two Google Workspace accounts before this. TWO.
+
+![susbscription](./subscribe-meme.jpeg)
+
+We'll be using Cloudflare's free email routing feature to set up a custom email address for your domain, and then forwarding those emails to your Gmail account. This way, you can send and receive emails from your custom domain without paying a dime.
+
+## Why you need a custom email
+
+Your have got a cool domain for your product/website (if you don't, you are ngmi), but your support email is something like `coolstartuphelp@gmail.com`, you’re leaking credibility faster than a bucket with no bottom.
+
+Using a custom email like help@coolstartup.com is worth the 5-minute setup:
+
+- **Professionalism**: It looks more legit and trustworthy.
+- **Branding**: It reinforces your brand every time you send an email.
+- **Control**: You own the domain, so you control the email addresses.
+- **Deliverability**: Custom domain emails (if set up right) often have better deliverability and are less likely to go to spam.
+- **Scalability**: You can create `team@`, `support@`, etc without juggling multiple Google accounts.
+
+Even if you are a solo developer, having a custom email makes you look more serious about your work. It’s like wearing a suit to a meeting instead of pajamas.
+
+## Before You Start
+
+To use Email Routing, your domain's DNS must be managed by Cloudflare else it won't work.
+
+Here is a guide to [set up your domain with Cloudflare](https://developers.cloudflare.com/fundamentals/get-started/setup/).
