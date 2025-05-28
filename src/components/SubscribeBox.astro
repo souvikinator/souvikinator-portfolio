@@ -1,14 +1,10 @@
 ---
-// Replace with your actual MailerLite form action URL
-const MAILERLITE_FORM_ACTION = 'https://YOUR_MAILERLITE_FORM_URL'
-import { BellPlus } from 'lucide-react'
+import { BellPlus, Loader2, X } from 'lucide-react'
 ---
 
 <!-- Floating Subscribe Box (Desktop) -->
 <form
-  action={MAILERLITE_FORM_ACTION}
-  method="post"
-  target="_blank"
+  id="desktop-subscribe-form"
   class="fixed bottom-6 right-6 z-40 hidden w-80 min-w-[250px] flex-col gap-2 rounded-lg border border-border bg-background p-4 shadow-lg md:flex"
   style="backdrop-filter: blur(4px);"
 >
@@ -31,10 +27,12 @@ import { BellPlus } from 'lucide-react'
       stroke="currentColor"
       stroke-width="1.5"
       viewBox="0 0 24 24"
-      ><path d="M4 4h16v16H4z" stroke="none"></path><path
-        d="M22 6.5V17a2.5 2.5 0 01-2.5 2.5h-15A2.5 2.5 0 012 17V6.5M22 6.5A2.5 2.5 0 0019.5 4h-15A2.5 2.5 0 002 6.5m20 0l-10 7-10-7"
-      ></path></svg
     >
+      <path d="M4 4h16v16H4z" stroke="none"></path>
+      <path
+        d="M22 6.5V17a2.5 2.5 0 01-2.5 2.5h-15A2.5 2.5 0 012 17V6.5M22 6.5A2.5 2.5 0 0019.5 4h-15A2.5 2.5 0 002 6.5m20 0l-10 7-10-7"
+      ></path>
+    </svg>
   </div>
   <button
     type="submit"
@@ -43,8 +41,10 @@ import { BellPlus } from 'lucide-react'
         variant: 'default',
       })}
   >
-    Subscribe
+    <span class="subscribe-btn-text">Subscribe</span>
+    <Loader2 className="subscribe-btn-loader hidden size-4 animate-spin" />
   </button>
+  <p class="error-message hidden text-sm text-red-500"></p>
 </form>
 
 <!-- Floating Bell Button (Mobile) -->
@@ -68,11 +68,8 @@ import { BellPlus } from 'lucide-react'
 <!-- Modal for Mobile -->
 <dialog id="subscribe-modal" class="z-50 w-11/12 max-w-sm rounded-lg p-0">
   <form
-    action={MAILERLITE_FORM_ACTION}
-    method="post"
-    target="_blank"
+    id="mobile-subscribe-form"
     class="flex flex-col gap-3 rounded-lg border border-border bg-background p-6"
-    onsubmit="this.closest('dialog').close()"
   >
     <span class="text-base font-semibold text-foreground"
       >Get new posts & project updates in your inbox</span
@@ -93,10 +90,12 @@ import { BellPlus } from 'lucide-react'
         stroke="currentColor"
         stroke-width="1.5"
         viewBox="0 0 24 24"
-        ><path d="M4 4h16v16H4z" stroke="none"></path><path
-          d="M22 6.5V17a2.5 2.5 0 01-2.5 2.5h-15A2.5 2.5 0 012 17V6.5M22 6.5A2.5 2.5 0 0019.5 4h-15A2.5 2.5 0 002 6.5m20 0l-10 7-10-7"
-        ></path></svg
       >
+        <path d="M4 4h16v16H4z" stroke="none"></path>
+        <path
+          d="M22 6.5V17a2.5 2.5 0 01-2.5 2.5h-15A2.5 2.5 0 012 17V6.5M22 6.5A2.5 2.5 0 0019.5 4h-15A2.5 2.5 0 002 6.5m20 0l-10 7-10-7"
+        ></path>
+      </svg>
     </div>
     <button
       type="submit"
@@ -105,8 +104,10 @@ import { BellPlus } from 'lucide-react'
           variant: 'default',
         })}
     >
-      Subscribe
+      <span class="subscribe-btn-text">Subscribe</span>
+      <Loader2 className="subscribe-btn-loader hidden size-4 animate-spin" />
     </button>
+    <p class="error-message hidden text-sm text-red-500"></p>
     <button
       type="button"
       class={'w-full mt-2 ' +
@@ -119,3 +120,126 @@ import { BellPlus } from 'lucide-react'
     </button>
   </form>
 </dialog>
+
+<!-- Success Message -->
+<div
+  id="newsletter-success"
+  class="fixed bottom-6 right-6 z-40 hidden w-80 min-w-[250px] flex-col gap-2 rounded-lg border border-border bg-background p-4 shadow-lg"
+>
+  <div class="flex items-center justify-between">
+    <span class="text-base font-semibold text-foreground"
+      >Thanks for subscribing! 🎉</span
+    >
+    <button
+      onclick="this.closest('div').classList.add('hidden')"
+      class="rounded-full p-1 hover:bg-muted"
+      aria-label="Close"
+    >
+      <X className="h-4 w-4" />
+    </button>
+  </div>
+  <p class="text-sm text-muted-foreground">
+    You'll receive new posts in your inbox.
+  </p>
+</div>
+
+<script>
+  function setLoading(form: HTMLFormElement, isLoading: boolean) {
+    const btn = form.querySelector('button[type="submit"]')
+    const btnText = btn?.querySelector('.subscribe-btn-text')
+    const btnLoader = btn?.querySelector('.subscribe-btn-loader')
+
+    if (isLoading) {
+      btn?.setAttribute('disabled', 'true')
+      btnText?.classList.add('hidden')
+      btnLoader?.classList.remove('hidden')
+    } else {
+      btn?.removeAttribute('disabled')
+      btnText?.classList.remove('hidden')
+      btnLoader?.classList.add('hidden')
+    }
+  }
+
+  function showError(form: HTMLFormElement, message: string) {
+    const errorEl = form.querySelector('.error-message')
+    if (errorEl) {
+      errorEl.textContent = message
+      errorEl.classList.remove('hidden')
+    }
+  }
+
+  function hideError(form: HTMLFormElement) {
+    const errorEl = form.querySelector('.error-message')
+    if (errorEl) {
+      errorEl.classList.add('hidden')
+    }
+  }
+
+  async function handleSubscribe(e: SubmitEvent) {
+    e.preventDefault()
+    const form = e.target as HTMLFormElement
+    const email = (
+      form.querySelector('input[name="email"]') as HTMLInputElement
+    ).value
+    const dialog = document.getElementById(
+      'subscribe-modal'
+    ) as HTMLDialogElement
+
+    hideError(form)
+    setLoading(form, true)
+
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Subscription failed')
+      }
+
+      // Show success message and hide forms
+      document.getElementById('newsletter-success')?.classList.remove('hidden')
+      document.querySelector('form.fixed.md\\:flex')?.classList.add('hidden')
+      document
+        .querySelector('button[aria-label="Subscribe"]')
+        ?.classList.add('hidden')
+
+      // Close modal if open
+      if (dialog?.open) {
+        dialog.close()
+      }
+    } catch (err) {
+      showError(
+        form,
+        err instanceof Error ? err.message : 'Subscription failed'
+      )
+    } finally {
+      setLoading(form, false)
+    }
+  }
+
+  // Set up form handlers
+  document.addEventListener('astro:page-load', () => {
+    const desktopForm = document.getElementById('desktop-subscribe-form')
+    const mobileForm = document.getElementById('mobile-subscribe-form')
+
+    // Set up form handlers
+    desktopForm?.addEventListener('submit', handleSubscribe)
+    mobileForm?.addEventListener('submit', handleSubscribe)
+  })
+
+  // Handle blog page positioning
+  document.addEventListener('astro:page-load', () => {
+    const blogPage = document.body.classList.contains('blog')
+    const successEl = document.getElementById('newsletter-success')
+
+    if (blogPage && successEl && !successEl.classList.contains('hidden')) {
+      const offset = successEl.offsetHeight + 24 // 24px for margin
+      document.body.style.paddingBottom = `${offset}px`
+    }
+  })
+</script>
