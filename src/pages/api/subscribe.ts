@@ -16,12 +16,13 @@ export const POST: APIRoute = async ({ request }) => {
     const API_KEY = import.meta.env.MAILERLITE_API_KEY
     const GROUP_ID = import.meta.env.MAILERLITE_GROUP_ID
 
+    console.log({ API_KEY, GROUP_ID })
+
     if (!API_KEY || !GROUP_ID) {
       console.error('Missing MailerLite configuration')
-      return new Response(
-        JSON.stringify({ error: 'Something went wrong' }),
-        { status: 500 },
-      )
+      return new Response(JSON.stringify({ error: 'Something went wrong' }), {
+        status: 500,
+      })
     }
 
     const mailerlite = new MailerLite({ api_key: API_KEY })
