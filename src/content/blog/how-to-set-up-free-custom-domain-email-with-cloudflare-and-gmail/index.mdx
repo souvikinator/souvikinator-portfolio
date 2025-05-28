@@ -37,4 +37,31 @@ Even if you are a solo developer, having a custom email makes you look more seri
 
 To use Email Routing, your domain's DNS must be managed by Cloudflare else it won't work.
 
-Here is a guide to [set up your domain with Cloudflare](https://developers.cloudflare.com/fundamentals/get-started/setup/).
+let's begin with the setup, assuming you already have your domain set up with Cloudflare. If not, go do that first by [adding your domain to Cloudflare](https://developers.cloudflare.com/fundamentals/setup/manage-domains/add-site/).
+
+## Step 1: Set Up Email Routing in Cloudflare
+
+1. Go to your [Cloudflare dashboard](https://dash.cloudflare.com/), you'll see your domains listed there.
+2. Select your domain from the list
+3. In the left sidebar, head to **Email** > **Routing**.
+   ![email routing](./email-routing.png)
+
+4. Click on **Get Started** if you are starting fresh if not then head to routing rules and scroll down click on "Create Address".
+
+![email routing rules](./routing-rules.png)
+
+5. Add your custom email address in the **Email Address** field, select action as **Send to Email** and destination as your primary Gmail address like so:
+   ![create email address](./cloudflare-email-routing.png)
+
+6. Cloudflare will prompt you to add some DNS records to verify your domain and set up email routing. Click on **Add records and enable** to proceed.
+   ![email routing DNS MX record](./DNS-record-MX.png)
+
+From cloudfare end we are set. Let's setup our Gmail to send/receive emails from this custom address.
+
+## Step 2: Configure Gmail to Send/Receive Emails
+
+1. Open Gmail and go to **Settings** (gear icon in the top right corner) and click on **See all settings**.
+
+2. Go to the **Accounts and Import** tab.
+
+![accounts and import](./gmail-settings.png)
