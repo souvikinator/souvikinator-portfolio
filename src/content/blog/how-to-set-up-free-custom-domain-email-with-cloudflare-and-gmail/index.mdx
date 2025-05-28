@@ -7,6 +7,8 @@ description: 'This guide provides step-by-step instructions to help you create a
 image: './cover.png'
 ---
 
+import Callout from '@/components/Callout.astro'
+
 You can get a free email with your domain and it slaps, (Thanks, Cloudflare + Gmail).
 
 I thought if you wanted an email like `name@jhadoopocha.com`, you had to pay Google or Zoho or some sketchy hosting guy named Rajesh.
@@ -62,6 +64,49 @@ From cloudfare end we are set. Let's setup our Gmail to send/receive emails from
 
 1. Open Gmail and go to **Settings** (gear icon in the top right corner) and click on **See all settings**.
 
-2. Go to the **Accounts and Import** tab.
+2. Go to the **Accounts and Import** tab > **send mail as** > **Add another email address**.
 
 ![accounts and import](./gmail-settings.png)
+
+3. In the pop-up, enter your custom email address and the name you want to associate it with.
+
+![gmail setup popup](./gmail-add-new-email-popup.png)
+
+4. Hit next and now we need to add the SMPT server. Gmail will automatically pick up the one from Cloudflare but it doesn't support so we need to stick with the Google's SMTP.
+
+5. Use the following settings:
+   - SMTP Server: `smtp.gmail.com`
+   - Port: `587`
+   - Username: Your Gmail address (primary gmail address not custom one)
+   - Password: Your App Password if you have 2FA enabled (not Gmail Password).
+   - Check the box for **Secured connection using TLS**.
+
+<Callout variant="note">
+  The password in the above step is Google App Password (not your GMail
+  password). Go ahead and create one
+  [here](https://myaccount.google.com/apppasswords). Make sure you have two
+  factor auth enabled on your Google account to use App Passwords.
+
+Here is a detailed guide for [creating Google App Passwords](https://docs.saleshandy.com/en/articles/10182595-how-to-set-up-an-app-password-in-google).
+
+</Callout>
+
+![gmail smtp setup success](./gmail-smtp-success.png)
+
+If you follow the above steps correctly, Gmail will send a verification email to your custom email address. Since we have set up email routing in Cloudflare, this email will be forwarded to your primary Gmail inbox.
+
+![gmail verification email](./confirmation-email.png)
+
+in my case they'll send to hello@souvikinator.com but since we configured it to forward to my primary Gmail, it'll show up in my personal email souvikat001@gmail.com. But if you see carefully it the receiving email is the custom one.
+
+## How to use custom email in Gmail
+
+Now that you have set up your custom email address, you can use it to send and receive emails directly from your Gmail account.
+
+When composing a new email, you can select your custom email address from the "From" dropdown menu. This way, your recipients will see your custom email address instead of your primary Gmail address.
+
+![compose email](./compose-email-new.png)
+
+here is a test email to show how it looks like when you send an email from your custom email address:
+
+![dummy email](./sample-email.jpeg)
