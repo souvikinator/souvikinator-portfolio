@@ -4,7 +4,6 @@ import Container from '@/components/Container.astro'
 import Link from '@/components/Link.astro'
 import ProjectCard from '@/components/ProjectCard.astro'
 import SocialIcons from '@/components/SocialIcons.astro'
-import SubscribeBox from '@/components/SubscribeBox.astro'
 import { buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { SITE, SOCIAL_LINKS } from '@/consts'
@@ -121,5 +120,4 @@ const minLatestProjects = projects.slice(0, 2)
       </div>
     </section>
   </Container>
-  <SubscribeBox />
 </Layout>
