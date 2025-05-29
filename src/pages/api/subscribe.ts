@@ -18,10 +18,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
     // @ts-ignore
     const GROUP_ID = locals.runtime.env.MAILERLITE_GROUP_ID
 
-    console.log({ API_KEY, GROUP_ID })
-
-    console.log({ API_KEY, GROUP_ID })
-
     if (!API_KEY || !GROUP_ID) {
       console.error('Missing MailerLite configuration')
       return new Response(JSON.stringify({ error: 'Something went wrong' }), {
